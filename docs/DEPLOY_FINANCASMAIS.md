@@ -1,5 +1,7 @@
 # Deploy em financasmais.com (acesso web)
 
+> **Importante:** enviar o código para o **GitHub** ou ler este guia **não** publica o site sozinho. O domínio só mostra o Sala de Sinais depois de um **VPS** (servidor) com API + engine rodando e o **DNS** apontando para o **IP desse VPS** — não para o parking `cdn.hstgr.net`. Ninguém da Hostinger instala o Python por você; é SSH + comandos abaixo (ou [`scripts/bootstrap-vps-ubuntu.sh`](../scripts/bootstrap-vps-ubuntu.sh)).
+
 Este guia explica como publicar o **Sala de Sinais** na internet — por exemplo em `https://financasmais.com` ou `https://app.financasmais.com` — **sem depender do duplo clique em `Sala-Sinais.bat`**. O `.bat` continua útil no seu PC Windows; no servidor você usa **systemd** (Linux) ou **Agendador de Tarefas** (Windows).
 
 ---
