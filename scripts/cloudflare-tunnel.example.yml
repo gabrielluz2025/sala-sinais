@@ -1,0 +1,25 @@
+# Exemplo de configuração cloudflared (Windows / PC em casa).
+# Copie para um path fixo (ex.: C:\cloudflared\config.yml) e ajuste.
+#
+# 1. cloudflared tunnel login
+# 2. cloudflared tunnel create sala-sinais
+# 3. Substitua TUNNEL_ID abaixo pelo UUID do túnel
+# 4. credentials-file: pasta onde cloudflared salvou o JSON do túnel
+# 5. cloudflared tunnel route dns sala-sinais financasmais.com
+# 6. cloudflared tunnel --config <este-arquivo> run sala-sinais
+#
+# Doc: docs/DEPLOY_HOSTINGER_SITE.md
+
+tunnel: TUNNEL_ID
+credentials-file: C:\Users\SEU_USUARIO\.cloudflared\TUNNEL_ID.json
+
+ingress:
+  # FastAPI serve cockpit + /api/* na mesma porta (padrão .env API_PORT=8000)
+  - hostname: financasmais.com
+    service: http://127.0.0.1:8000
+  - hostname: www.financasmais.com
+    service: http://127.0.0.1:8000
+  # Opcional: subdomínio só para o app, landing em @ na Hostinger (caminho B)
+  # - hostname: app.financasmais.com
+  #   service: http://127.0.0.1:8000
+  - service: http_status:404

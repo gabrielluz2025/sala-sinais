@@ -1,6 +1,8 @@
 # Deploy em financasmais.com (acesso web)
 
-> **Importante:** enviar o código para o **GitHub** ou ler este guia **não** publica o site sozinho. O domínio só mostra o Sala de Sinais depois de um **VPS** (servidor) com API + engine rodando e o **DNS** apontando para o **IP desse VPS** — não para o parking `cdn.hstgr.net`. Ninguém da Hostinger instala o Python por você; é SSH + comandos abaixo (ou [`scripts/bootstrap-vps-ubuntu.sh`](../scripts/bootstrap-vps-ubuntu.sh)).
+> **Sem VPS?** Se você quer usar só o plano **Website** da Hostinger (File Manager / WordPress) e **não** contratar VPS, leia **[DEPLOY_HOSTINGER_SITE.md](DEPLOY_HOSTINGER_SITE.md)** — PC Windows + Cloudflare Tunnel (MT5), landing + link, ou PaaS em simulação.
+
+> **Importante:** enviar o código para o **GitHub** ou ler este guia **não** publica o site sozinho. O domínio só mostra o Sala de Sinais depois de **API + engine rodando 24/7** em algum lugar (VPS, PC+túnel, PaaS) e o **DNS** apontando para esse destino — **não** para o parking `cdn.hstgr.net`. Este guia foca em **VPS**; ninguém da Hostinger instala o Python por você; é SSH + comandos abaixo (ou [`scripts/bootstrap-vps-ubuntu.sh`](../scripts/bootstrap-vps-ubuntu.sh)).
 
 Este guia explica como publicar o **Sala de Sinais** na internet — por exemplo em `https://financasmais.com` ou `https://app.financasmais.com` — **sem depender do duplo clique em `Sala-Sinais.bat`**. O `.bat` continua útil no seu PC Windows; no servidor você usa **systemd** (Linux) ou **Agendador de Tarefas** (Windows).
 
@@ -192,6 +194,8 @@ Equivalente à opção **1** do `.bat` (API + engine sim): duas unidades systemd
 
 Arquivos de apoio no repo:
 
+- [DEPLOY_HOSTINGER_SITE.md](DEPLOY_HOSTINGER_SITE.md) — deploy **sem VPS** (Website Hostinger + túnel / PaaS)
+- [`scripts/cloudflare-tunnel.example.yml`](../scripts/cloudflare-tunnel.example.yml) — exemplo Cloudflare Tunnel no PC Windows
 - [`deploy/nginx-sala-sinais.conf.example`](../deploy/nginx-sala-sinais.conf.example)
 - [`deploy/systemd/sala-sinais-api.service.example`](../deploy/systemd/sala-sinais-api.service.example)
 - [`deploy/systemd/sala-sinais-engine.service.example`](../deploy/systemd/sala-sinais-engine.service.example)
