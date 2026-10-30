@@ -1,0 +1,21 @@
+[Unit]
+Description=Sala de Sinais — engine (simulação ou MT5 via .env)
+After=network-online.target sala-sinais-api.service
+Wants=network-online.target
+# Engine depende da API para webhooks/estado; inicia logo após a API
+Requires=sala-sinais-api.service
+
+[Service]
+Type=simple
+User=sinais
+Group=sinais
+WorkingDirectory=/home/sinais/sala-sinais
+Environment=PYTHONPATH=/home/sinais/sala-sinais
+# Modo MVP Linux: ENGINE_MODE=simulation no .env
+# Windows + MT5: use paper_mt5/live_mt5 — normalmente não roda neste unit em Linux
+ExecStart=/home/sinais/sala-sinais/.venv/bin/python -m engine.main
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

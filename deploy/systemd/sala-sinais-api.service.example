@@ -1,0 +1,20 @@
+[Unit]
+Description=Sala de Sinais — FastAPI (cockpit + REST)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sinais
+Group=sinais
+WorkingDirectory=/home/sinais/sala-sinais
+Environment=PYTHONPATH=/home/sinais/sala-sinais
+# Produção: API_HOST=0.0.0.0 no .env (uvicorn escuta todas as interfaces locais)
+ExecStart=/home/sinais/sala-sinais/.venv/bin/python -m api.main
+Restart=on-failure
+RestartSec=5
+# Opcional: limites
+# MemoryMax=1G
+
+[Install]
+WantedBy=multi-user.target

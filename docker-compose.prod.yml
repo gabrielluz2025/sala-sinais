@@ -1,0 +1,46 @@
+# Produção leve: API + engine em simulação (sem MT5).
+# Uso: docker compose -f docker-compose.prod.yml up -d
+# Coloque nginx/Caddy na frente do host:8000 para HTTPS público.
+#
+# MT5 exige Windows fora deste compose.
+
+services:
+  api:
+    image: python:3.12-slim
+    working_dir: /app
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    command: sh -c "pip install -q -r requirements.txt && PYTHONPATH=/app python -m api.main"
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      DATABASE_URL: sqlite+aiosqlite:///./data/sala_sinais.db
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-change-me-in-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://financasmais.com}
+      ENGINE_MODE: simulation
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  engine:
+    image: python:3.12-slim
+    working_dir: /app
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    command: sh -c "pip install -q -r requirements.txt && PYTHONPATH=/app python -m engine.main"
+    environment:
+      API_BASE_URL: http://api:8000
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-change-me-in-production}
+      ENGINE_MODE: simulation
+      SIGNAL_MODE: paper
+      LIVE_TRADING: "false"
+      AUTO_EXECUTE_ORDERS: "false"
