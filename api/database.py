@@ -10,8 +10,23 @@ if settings.database_url.startswith("sqlite"):
     db_path = _ROOT / "data"
     db_path.mkdir(parents=True, exist_ok=True)
 
-_sync_url = settings.database_url.replace("sqlite+aiosqlite", "sqlite")
-engine = create_engine(_sync_url, connect_args={"check_same_thread": False})
+
+def _engine_kwargs(sync_url: str) -> dict:
+    kwargs: dict = {}
+    if sync_url.startswith("sqlite"):
+        kwargs["connect_args"] = {"check_same_thread": False}
+    elif sync_url.startswith("postgresql"):
+        kwargs["pool_pre_ping"] = True
+        # Supabase pooler (6543) + PgBouncer: desliga prepared statements no psycopg3
+        if ":6543" in sync_url:
+            kwargs["connect_args"] = {"prepare_threshold": None}
+    return kwargs
+
+
+engine = create_engine(
+    settings.sqlalchemy_sync_url,
+    **_engine_kwargs(settings.sqlalchemy_sync_url),
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -100,6 +115,13 @@ _SIGNAL_EXTRA_COLUMNS: dict[str, str] = {
 }
 
 
+def _ddl_type(sqlite_style: str) -> str:
+    if engine.dialect.name == "postgresql":
+        if sqlite_style == "FLOAT":
+            return "DOUBLE PRECISION"
+    return sqlite_style
+
+
 def _migrate_signals_columns() -> None:
     insp = inspect(engine)
     if "signals" not in insp.get_table_names():
@@ -108,7 +130,8 @@ def _migrate_signals_columns() -> None:
     with engine.begin() as conn:
         for name, sql_type in _SIGNAL_EXTRA_COLUMNS.items():
             if name not in existing:
-                conn.execute(text(f"ALTER TABLE signals ADD COLUMN {name} {sql_type}"))
+                col_type = _ddl_type(sql_type)
+                conn.execute(text(f"ALTER TABLE signals ADD COLUMN {name} {col_type}"))
 
 
 _STATE_EXTRA_COLUMNS: dict[str, str] = {
@@ -136,7 +159,8 @@ def _migrate_agent_config_columns() -> None:
     with engine.begin() as conn:
         for name, sql_type in _AGENT_CONFIG_EXTRA_COLUMNS.items():
             if name not in existing:
-                conn.execute(text(f"ALTER TABLE agent_config ADD COLUMN {name} {sql_type}"))
+                col_type = _ddl_type(sql_type)
+                conn.execute(text(f"ALTER TABLE agent_config ADD COLUMN {name} {col_type}"))
 
 
 def _migrate_system_state_columns() -> None:
@@ -147,7 +171,8 @@ def _migrate_system_state_columns() -> None:
     with engine.begin() as conn:
         for name, sql_type in _STATE_EXTRA_COLUMNS.items():
             if name not in existing:
-                conn.execute(text(f"ALTER TABLE system_state ADD COLUMN {name} {sql_type}"))
+                col_type = _ddl_type(sql_type)
+                conn.execute(text(f"ALTER TABLE system_state ADD COLUMN {name} {col_type}"))
 
 
 def init_db() -> None:

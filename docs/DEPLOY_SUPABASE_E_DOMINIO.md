@@ -2,7 +2,7 @@
 
 Este documento explica **como o projeto `sala-sinais` se relaciona** com um sistema anterior em **financasmais.com** que costumava usar **Supabase**, e o que muda (ou não) no **DNS** e no **deploy** quando você passa para a arquitetura **FastAPI + engine** deste repositório.
 
-> **Resumo em uma frase:** o **Supabase** pode continuar útil como **banco Postgres gerenciado** (opcional, no futuro), mas **não substitui** a API Python, o **engine** nem o **MetaTrader 5** — e **não há integração Supabase no código hoje**.
+> **Resumo em uma frase:** o **Supabase** pode ser o **Postgres** da API via `DATABASE_URL` / `SUPABASE_DB_URL` (ver **[SUPABASE_INTEGRACAO.md](SUPABASE_INTEGRACAO.md)**), mas **não substitui** a API Python, o **engine** nem o **MetaTrader 5**.
 
 ---
 
@@ -11,7 +11,7 @@ Este documento explica **como o projeto `sala-sinais` se relaciona** com um sist
 | Aspecto | Sistema típico com **Supabase** (legado / outro app) | **Sala de Sinais** (`sala-sinais`, este repo) |
 |--------|------------------------------------------------------|-----------------------------------------------|
 | Backend HTTP | Edge Functions, ou frontend falando direto com Supabase | **`api/` — FastAPI (uvicorn)** na porta `8000` |
-| Dados | Postgres + Auth + Realtime no Supabase | **`SQLite`** local (`data/sala_sinais.db`, ver `.env` `DATABASE_URL`) |
+| Dados | Postgres + Auth + Realtime no Supabase | **`SQLite`** local por padrão; **Postgres Supabase** opcional (`DATABASE_URL`, ver [SUPABASE_INTEGRACAO.md](SUPABASE_INTEGRACAO.md)) |
 | Lógica de mercado / sinais | Regras em JS/SQL ou funções serverless | **`engine/` — processo Python separado** (estratégia, webhook na API, MT5) |
 | Painel web | App hospedado (Vercel, Lovable, etc.) + Supabase | **Cockpit** servido pela própria API (`cockpit/dist` em `/`) |
 | Trading B3 | **Não** roda MT5 dentro do Supabase | **MT5 só no Windows**, na mesma máquina que o engine (idealmente) |
@@ -23,7 +23,7 @@ Este documento explica **como o projeto `sala-sinais` se relaciona** com um sist
 
 ## O que este repositório **não** contém
 
-- Nenhum SDK Supabase, `SUPABASE_URL`, nem migrations Supabase no código.
+- Nenhum SDK Supabase client (Auth/Realtime/Storage) no cockpit — só conexão **Postgres** opcional na API.
 - Nenhum deploy automático para Supabase Hosting ou Edge Functions.
 
 Se você ainda tem usuários, tabelas ou um front antigo no Supabase, trate isso como **sistema legado** até migrar dados e desligar o app antigo de forma consciente (backup, export CSV, etc.).
@@ -58,11 +58,11 @@ Diagrama do stack **atual** (recomendado para entender o deploy):
          engine (Python) ←→ MT5 (Windows, opcional)
 ```
 
-Diagrama **hipotético futuro** (Postgres no Supabase — **não implementado**):
+Diagrama **com Postgres no Supabase** (opcional — ver [SUPABASE_INTEGRACAO.md](SUPABASE_INTEGRACAO.md)):
 
 ```
 FastAPI + engine (+ MT5 no PC/VPS Windows)
-        ↓ DATABASE_URL=postgresql+asyncpg://...
+        ↓ DATABASE_URL ou SUPABASE_DB_URL (postgresql+psycopg://...)
    Supabase Postgres (só banco)
 ```
 
@@ -115,9 +115,9 @@ O túnel termina em **HTTP local na FastAPI**, independentemente de você usar S
 
 ## Postgres / Supabase como banco (opcional, futuro)
 
-Hoje a API usa **SQLite** (`DATABASE_URL=sqlite+aiosqlite:///./data/sala_sinais.db` no `.env.example`).
+Por padrão a API usa **SQLite** (`DATABASE_URL=sqlite+aiosqlite:///./data/sala_sinais.db` no `.env.example`).
 
-**Uso futuro possível do Supabase:** apenas o **Postgres** (connection string no painel Supabase → **Settings → Database**), trocando `DATABASE_URL` para algo como `postgresql+asyncpg://...` — **desde que** o código da API seja adaptado e testado (migrations, tipos, backup). Isso **não** migra sozinho dados do SQLite nem substitui Auth/Realtime do app antigo sem trabalho explícito.
+Para o **Postgres do Supabase**, configure a URI em **`DATABASE_URL`** ou **`SUPABASE_DB_URL`** — passo a passo em **[SUPABASE_INTEGRACAO.md](SUPABASE_INTEGRACAO.md)**. Isso **não** migra sozinho dados do SQLite nem reativa Auth/Realtime do app antigo.
 
 Benefícios se fizer isso depois:
 

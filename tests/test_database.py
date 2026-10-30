@@ -63,6 +63,17 @@ def test_init_db_adds_strategy_columns_on_existing_sqlite(tmp_path, monkeypatch)
         assert name in cols
 
 
+def test_normalize_database_url_postgres():
+    from api.config import normalize_database_url
+
+    assert normalize_database_url("postgres://u:p@host/db").startswith("postgresql+psycopg://")
+    assert normalize_database_url("postgresql://u:p@host/db").startswith("postgresql+psycopg://")
+    assert (
+        normalize_database_url("postgresql+asyncpg://u:p@host/db")
+        == "postgresql+psycopg://u:p@host/db"
+    )
+
+
 def test_core_imports():
     import api.library
     import api.main
