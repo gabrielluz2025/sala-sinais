@@ -8,7 +8,7 @@
 # 5. cloudflared tunnel route dns sala-sinais financasmais.com
 # 6. cloudflared tunnel --config <este-arquivo> run sala-sinais
 #
-# Doc: docs/DEPLOY_HOSTINGER_SITE.md
+# Doc: docs/CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md (também scripts/cloudflare-tunnel.yml.example)
 
 tunnel: TUNNEL_ID
 credentials-file: C:\Users\SEU_USUARIO\.cloudflared\TUNNEL_ID.json

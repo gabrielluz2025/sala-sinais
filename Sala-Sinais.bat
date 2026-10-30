@@ -22,6 +22,7 @@ echo   [4] Simulacao  ^(so engine, sem MT5^)
 echo   [5] Preparar MT5  ^(prepare_mt5_trading^)
 echo   [6] Corretora demo / modo real  ^(preflight^)
 echo   [7] Aprendizado 24h  ^(API + engine, ate pregão B3^)
+echo   [8] Modo web  ^(dominio financasmais.com + Cloudflare Tunnel^)
 echo   [0] Sair
 echo.
 set "MENU_CHOICE="
@@ -35,6 +36,7 @@ if "%MENU_CHOICE%"=="4" goto :do_simulacao
 if "%MENU_CHOICE%"=="5" goto :do_mt5
 if "%MENU_CHOICE%"=="6" goto :menu_mt5_live
 if "%MENU_CHOICE%"=="7" goto :do_overnight
+if "%MENU_CHOICE%"=="8" goto :do_web
 echo Opcao invalida.
 timeout /t 2 /nobreak >nul
 goto :menu
@@ -69,8 +71,10 @@ if /i "%~1"=="prepare_mt5" goto :do_mt5
 if /i "%~1"=="corretora" goto :do_corretora
 if /i "%~1"=="real" goto :do_real
 if /i "%~1"=="live" goto :do_real
+if /i "%~1"=="web" goto :do_web
+if /i "%~1"=="dominio" goto :do_web
 echo [ERRO] Argumento desconhecido: %~1
-echo Uso: Sala-Sinais.bat [all^|sistema^|engine^|simulacao^|mt5^|corretora^|real]
+echo Uso: Sala-Sinais.bat [all^|sistema^|engine^|simulacao^|mt5^|corretora^|real^|web]
 exit /b 1
 
 :do_all
@@ -163,6 +167,22 @@ set "ENGINE_MODE=simulation"
 echo Modo SIMULAÇÃO — não precisa do MetaTrader 5.
 echo.
 ".venv\Scripts\python.exe" -m engine.main
+if defined FROM_MENU goto :menu_after_action
+pause
+exit /b 0
+
+:do_web
+call :ensure_venv strict
+if errorlevel 1 goto :fail_exit
+call :ensure_env
+call :build_cockpit lax
+echo.
+echo ============================================================
+echo   MODO WEB — API + engine + Cloudflare Tunnel ^(se config existir^)
+echo   Guia: docs\CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md
+echo ============================================================
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%ROOT%scripts\start-sala-sinais-web.ps1"
 if defined FROM_MENU goto :menu_after_action
 pause
 exit /b 0

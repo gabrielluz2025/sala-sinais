@@ -96,7 +96,7 @@ Teste local: `http://127.0.0.1:8000/health` deve responder antes de configurar o
 
 No painel Cloudflare → **Zero Trust** / **Networks** → **Tunnels** → **Create a tunnel** → conector **Windows**. Copie o comando de instalação ou use token.
 
-Exemplo de config (ajuste paths): [`scripts/cloudflare-tunnel.example.yml`](../scripts/cloudflare-tunnel.example.yml).
+Checklist detalhado: [**CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md**](CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md). Exemplo de config: [`scripts/cloudflare-tunnel.yml.example`](../scripts/cloudflare-tunnel.yml.example).
 
 ```powershell
 cloudflared tunnel login
@@ -230,6 +230,7 @@ Em planos **Website** comuns (**Single**, **Premium**, **Business** web hosting)
 
 ## Arquivos de apoio
 
-- [`scripts/cloudflare-tunnel.example.yml`](../scripts/cloudflare-tunnel.example.yml) — ingress para porta 8000
+- [CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md](CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md) — passo a passo túnel + DNS
+- [`scripts/cloudflare-tunnel.yml.example`](../scripts/cloudflare-tunnel.yml.example) — ingress para porta 8000
 - [DEPLOY_FINANCASMAIS.md](DEPLOY_FINANCASMAIS.md) — VPS, nginx, systemd
 - [MODO_REAL.md](MODO_REAL.md) — antes de trading real
