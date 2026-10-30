@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sala de Sinais — Painel Aurora v3</title>
+    <link rel="stylesheet" href="/static/design-system.css?v=3" />
+    <link rel="stylesheet" href="/static/app-shell.css?v=3" />
+    <link rel="stylesheet" href="/static/legacy.css?v=3" id="theme-classic-css" disabled />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body class="theme-novo">
+    <div class="desk" id="desk">
+      <aside class="sidebar glass-panel" id="app-sidebar">
+        <div class="sidebar-head">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div class="brand-copy">
+              <h1>Sala de Sinais</h1>
+              <p class="subtitle">Painel Aurora · B3 educacional</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="sidebar-toggle"
+            id="sidebar-toggle"
+            aria-label="Recolher menu lateral"
+            aria-expanded="true"
+            aria-controls="app-sidebar"
+          >
+            <span class="sidebar-toggle-icon" aria-hidden="true">‹</span>
+          </button>
+        </div>
+        <nav class="nav">
+          <span class="nav-label">Controles rápidos</span>
+          <button type="button" id="btn-pause" class="nav-btn">Pausar engine</button>
+          <button type="button" id="btn-resume" class="nav-btn secondary">Retomar</button>
+          <button type="button" id="btn-flatten" class="nav-btn danger">Zerar posição</button>
+        </nav>
+        <nav class="zone-nav" aria-label="Ir para seção" id="zone-nav">
+          <span class="nav-label">Navegação</span>
+          <a class="zone-nav-link" href="#zone-status" data-zone="zone-status"><span class="nav-icon" aria-hidden="true">◉</span><span class="nav-text">Status</span></a>
+          <a class="zone-nav-link" href="#zone-auto-execution" data-zone="zone-auto-execution"><span class="nav-icon" aria-hidden="true">⚙</span><span class="nav-text">Execução</span></a>
+          <a class="zone-nav-link" href="#zone-pnl" data-zone="zone-pnl"><span class="nav-icon" aria-hidden="true">₿</span><span class="nav-text">Ganhos</span></a>
+          <a class="zone-nav-link" href="#agent-config-panel" data-zone="agent-config-panel"><span class="nav-icon" aria-hidden="true">◎</span><span class="nav-text">Configurar</span></a>
+          <a class="zone-nav-link" href="#zone-alerts" data-zone="zone-alerts"><span class="nav-icon" aria-hidden="true">◈</span><span class="nav-text">Alertas</span></a>
+          <a class="zone-nav-link" href="#zone-charts" data-zone="zone-charts"><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-text">Gráficos</span></a>
+          <a class="zone-nav-link" href="#zone-news" data-zone="zone-news"><span class="nav-icon" aria-hidden="true">◇</span><span class="nav-text">Notícias</span></a>
+          <a class="zone-nav-link" href="#zone-library" data-zone="zone-library"><span class="nav-icon" aria-hidden="true">▣</span><span class="nav-text">Biblioteca</span></a>
+          <a class="zone-nav-link" href="#zone-trades" data-zone="zone-trades"><span class="nav-icon" aria-hidden="true">⇄</span><span class="nav-text">Operações</span></a>
+          <a class="zone-nav-link" href="#zone-signals" data-zone="zone-signals"><span class="nav-icon" aria-hidden="true">◆</span><span class="nav-text">Sinais</span></a>
+        </nav>
+        <div class="engine-status" id="engine-status">
+          <span class="dot" id="engine-dot"></span>
+          <span id="engine-label">Engine —</span>
+        </div>
+        <section class="panel connection-panel zone-card" id="connection-panel">
+          <h2>Conexão</h2>
+          <p class="zone-desc">De onde vêm cotação e ordens.</p>
+          <dl class="connection-dl">
+            <dt>Modo</dt>
+            <dd id="conn-mode">—</dd>
+            <dt>Fonte de dados</dt>
+            <dd id="conn-source">—</dd>
+            <dt>MT5</dt>
+            <dd id="conn-mt5">—</dd>
+            <dt>Último heartbeat</dt>
+            <dd id="conn-heartbeat">—</dd>
+          </dl>
+        </section>
+        <details class="panel checklist-details">
+          <summary>Quando conectar tempo real</summary>
+          <ul class="checklist-items">
+            <li>Conta demo validada por dias</li>
+            <li>RLP ativo na corretora</li>
+            <li><code>ENGINE_MODE=paper_mt5</code> + MT5 aberto</li>
+            <li><code>SIGNAL_MODE=live</code> e <code>LIVE_TRADING=true</code> só com risco aceito</li>
+            <li>Guia: <a href="/docs/MODO_REAL.md" target="_blank" rel="noopener">MODO_REAL.md</a></li>
+          </ul>
+        </details>
+        <section class="controls-legacy">
+          <label>
+            URL da API
+            <input type="text" id="api-url" value="http://127.0.0.1:8000" />
+          </label>
+        </section>
+      </aside>
+
+      <main class="main" id="main-content">
+        <header class="topbar app-topbar">
+          <div class="topbar-title-block">
+            <button
+              type="button"
+              class="mobile-nav-toggle"
+              id="mobile-nav-toggle"
+              aria-label="Abrir menu de seções"
+              aria-expanded="false"
+              aria-controls="app-sidebar"
+            >
+              <span aria-hidden="true">☰</span>
+            </button>
+            <p class="topbar-eyebrow">Aurora v3 · ao vivo</p>
+            <h2>Seu cockpit de simulação</h2>
+            <p class="page-lead">Visual novo, mesma API — sinais, risco e resultado do dia com atualização suave a cada 20s.</p>
+            <p id="quote-line" class="quote-line">Cotação: aguardando engine…</p>
+          </div>
+          <div class="topbar-meta">
+            <div class="live-chips" aria-label="Status ao vivo">
+              <span id="chip-api" class="live-chip chip-neutral">API —</span>
+              <span id="chip-engine" class="live-chip chip-neutral">Engine —</span>
+              <span id="chip-modo" class="live-chip chip-neutral">Modo —</span>
+              <span id="chip-dados" class="live-chip chip-neutral" title="Fonte de cotação">Dados: —</span>
+            </div>
+            <span id="operating-badge" class="mode-badge simulation" title="Simulação = sem dinheiro real; Paper MT5 = conta demo; Ao vivo = risco real.">SIMULAÇÃO</span>
+            <span id="mode-badge" class="mode-badge paper hidden" title="Sinal paper/live">paper</span>
+            <span id="account-badge" class="mode-badge muted hidden" title="Tipo de conta MT5">—</span>
+            <div class="theme-switcher" role="group" aria-label="Aparência do painel">
+              <span class="theme-switcher-label">Visual</span>
+              <button type="button" class="theme-switch-btn active" data-theme="v3" id="theme-btn-novo">Aurora v3</button>
+              <button type="button" class="theme-switch-btn" data-theme="classic" id="theme-btn-classic">Visual antigo</button>
+            </div>
+            <div class="theme-switcher color-mode-switcher" role="group" aria-label="Modo claro ou escuro">
+              <span class="theme-switcher-label">Luz</span>
+              <button type="button" class="theme-switch-btn color-mode-btn active" data-color-mode="auto" id="color-mode-auto">Auto</button>
+              <button type="button" class="theme-switch-btn color-mode-btn" data-color-mode="light" id="color-mode-light">Claro</button>
+              <button type="button" class="theme-switch-btn color-mode-btn" data-color-mode="dark" id="color-mode-dark">Escuro</button>
+            </div>
+            <div class="live-refresh" id="live-refresh" aria-live="polite">
+              <span class="refresh-spinner" id="refresh-spinner" aria-hidden="true"></span>
+              <span id="last-update-label" class="last-update-label">Aguardando primeira atualização…</span>
+            </div>
+            <button type="button" id="btn-export-signals" class="btn-ghost">Exportar CSV</button>
+            <button type="button" id="refresh-btn" class="refresh">Atualizar</button>
+          </div>
+        </header>
+
+        <section class="dashboard-home" id="dashboard-home" aria-label="Resumo do dia">
+          <aside
+            class="today-result-strip glass-card dashboard-hero"
+            id="today-result-strip"
+            aria-labelledby="today-result-heading"
+          >
+            <div class="today-result-main">
+              <div class="today-result-copy">
+                <h2 class="today-result-heading" id="today-result-heading">Resultado de hoje</h2>
+                <p class="today-result-sub muted">Fechados hoje (líquido após taxas)</p>
+                <p id="today-result-open" class="today-result-open muted hidden" aria-live="polite"></p>
+              </div>
+              <strong id="today-result-amount" class="today-result-amount mono-num" aria-live="polite">—</strong>
+            </div>
+            <a class="today-result-link" href="#zone-pnl">Ver ganhos e perdas</a>
+          </aside>
+
+          <div class="session-strip glass-card" id="session-strip" aria-label="Resumo da sessão">
+            <div class="session-item">
+              <span class="session-key">Modo</span>
+              <strong id="session-modo">—</strong>
+            </div>
+            <div class="session-item">
+              <span class="session-key">Ativo foco</span>
+              <strong id="session-ativo" class="mono-num">—</strong>
+            </div>
+            <div class="session-item">
+              <span class="session-key">Estratégia ativa</span>
+              <strong id="session-estrategia">—</strong>
+            </div>
+          </div>
+        </section>
+
+        <ol class="onboarding-strip" id="onboarding-strip" aria-label="Primeiros passos">
+          <li class="onboarding-step" id="step-api">
+            <span class="step-icon" aria-hidden="true">⚡</span>
+            <div>
+              <strong>Sistema ligado</strong>
+              <span class="step-hint">API respondendo na porta local</span>
+            </div>
+            <span class="step-check" id="step-api-check" aria-hidden="true"></span>
+          </li>
+          <li class="onboarding-step" id="step-engine">
+            <span class="step-icon" aria-hidden="true">🔄</span>
+            <div>
+              <strong>Engine rodando</strong>
+              <span class="step-hint">Gerando cotações e sinais</span>
+            </div>
+            <span class="step-check" id="step-engine-check" aria-hidden="true"></span>
+          </li>
+          <li class="onboarding-step" id="step-config">
+            <span class="step-icon" aria-hidden="true">💾</span>
+            <div>
+              <strong>Config salva</strong>
+              <span class="step-hint">Ação B3 escolhida — demais parâmetros já vêm prontos</span>
+            </div>
+            <span class="step-check" id="step-config-check" aria-hidden="true"></span>
+          </li>
+        </ol>
+
+        <div id="offline-banner" class="offline-banner hidden" role="alert">
+          <strong>Offline — rode <code class="code-chip">Sala-Sinais.bat</code> (opção 2)</strong>
+          <ol>
+            <li>Duplo clique em <code class="code-chip">Sala-Sinais.bat</code> → opção <strong>2</strong> (sobe a API nesta porta)</li>
+            <li>Para sinais simulados: opção <strong>4</strong> ou <code class="code-chip">Sala-Sinais.bat simulacao</code></li>
+            <li>Atualize esta página — o status verifica a cada 5s</li>
+          </ol>
+        </div>
+
+        <div id="engine-offline-banner" class="engine-offline-banner hidden" role="status">
+          <strong>API online, mas o engine está parado</strong>
+          <p class="engine-offline-cta">
+            Clique duas vezes em <code class="code-chip">Sala-Sinais.bat</code> na pasta
+            <code class="code-chip">sala-sinais</code>
+            (opção <strong>1</strong> — API + simulação). Ou opção <strong>4</strong> se a API já estiver aberta.
+          </p>
+        </div>
+
+        <section class="zone zone-status" id="zone-status">
+          <header class="zone-header">
+            <h3>Status</h3>
+            <p class="zone-desc">Indicadores do dia — números atualizam sozinhos a cada 20s.</p>
+          </header>
+          <div class="status-dashboard" id="status-dashboard" aria-label="Conexão e último sinal">
+            <article class="status-tile" id="status-tile-api">
+              <span class="status-tile-icon" aria-hidden="true">⚡</span>
+              <div>
+                <span class="status-tile-label">API</span>
+                <strong id="status-dash-api">—</strong>
+              </div>
+            </article>
+            <article class="status-tile" id="status-tile-engine">
+              <span class="status-tile-icon" aria-hidden="true">🔄</span>
+              <div>
+                <span class="status-tile-label">Engine</span>
+                <strong id="status-dash-engine">—</strong>
+              </div>
+            </article>
+            <article class="status-tile" id="status-tile-dados">
+              <span class="status-tile-icon" aria-hidden="true">📡</span>
+              <div>
+                <span class="status-tile-label">Dados</span>
+                <strong id="status-dash-dados">—</strong>
+              </div>
+            </article>
+            <article class="status-tile" id="status-tile-signal">
+              <span class="status-tile-icon" aria-hidden="true">📶</span>
+              <div>
+                <span class="status-tile-label">Último sinal</span>
+                <strong id="status-dash-last-signal">—</strong>
+              </div>
+            </article>
+          </div>
+          <section class="kpi-grid panel glass-card" id="stats">
+            <div class="kpi">
+              <span class="label">Sinais hoje</span>
+              <strong id="stat-today" class="mono-num">—</strong>
+            </div>
+            <div class="kpi">
+              <span class="label">Sinais no mês</span>
+              <strong id="stat-month" class="mono-num">—</strong>
+            </div>
+            <div class="kpi">
+              <span class="label">Win rate (fechados)</span>
+              <strong id="stat-winrate" class="mono-num">—</strong>
+            </div>
+            <div class="kpi highlight">
+              <span class="label">PnL líquido (mês)</span>
+              <strong id="stat-pnl-month" class="mono-num">—</strong>
+            </div>
+            <div class="kpi">
+              <span class="label">PnL líquido (hoje)</span>
+              <strong id="stat-pnl-day" class="mono-num">—</strong>
+            </div>
+            <div class="kpi">
+              <span class="label">API</span>
+              <strong id="stat-api" class="mono-num">—</strong>
+            </div>
+          </section>
+          <section class="zone-sub panel glass-card auto-exec-panel" id="zone-auto-execution" aria-labelledby="auto-exec-heading">
+            <header class="zone-header">
+              <h3 id="auto-exec-heading">Execução automática</h3>
+              <p class="zone-desc">
+                Compra/venda no MT5 da corretora (não Avenue). Demo primeiro —
+                <a href="/docs/EXECUCAO_AUTOMATICA.md" target="_blank" rel="noopener">guia completo</a>.
+              </p>
+            </header>
+            <div class="auto-exec-toggle-row" aria-label="Estado da execução automática">
+              <span class="label">Execução automática</span>
+              <span id="auto-exec-toggle" class="toggle-readonly off" role="status">Desligada</span>
+            </div>
+            <div id="auto-exec-live-warning" class="auto-exec-warning hidden" role="alert">
+              <strong>LIVE_TRADING=true no servidor</strong>
+              <p>Ordens podem ir para conta real. Confirme no <code>.env</code> e no MT5 antes de continuar.</p>
+            </div>
+            <ol class="auto-exec-steps" id="auto-exec-steps" aria-label="Checklist de conexão"></ol>
+            <ul id="auto-exec-blockers" class="auto-exec-blockers muted" aria-live="polite"></ul>
+            <div class="auto-exec-actions">
+              <button type="button" id="btn-auto-exec-env" class="nav-btn secondary">
+                Copiar .env (paper_mt5 demo)
+              </button>
+            </div>
+          </section>
+        </section>
+
+        <section class="zone zone-pnl panel glass-card" id="zone-pnl">
+          <header class="zone-header">
+            <h3>Ganhos e perdas</h3>
+            <p class="zone-desc">
+              Bruto, taxas e líquido operacional vêm dos trades fechados. IR abaixo é <strong>estimativa</strong> (20% day trade).
+              <button type="button" class="tip-btn" data-tip="IR real depende de DARF, outros trades, isenções — consulte contador." aria-label="Ajuda: IR estimado">?</button>
+            </p>
+          </header>
+          <div class="pnl-accounting-table-wrap">
+            <table class="pnl-accounting-table" aria-label="Decomposição do resultado">
+              <thead>
+                <tr><th scope="col">Período</th><th scope="col">Bruto</th><th scope="col">Taxas B3+corretagem</th><th scope="col">Líquido operacional</th><th scope="col">IR estimado (20%)</th><th scope="col">Após IR (est.)</th></tr>
+              </thead>
+              <tbody id="pnl-accounting-body">
+                <tr><td colspan="6" class="muted">Carregando…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pnl-hero-grid">
+            <div class="pnl-hero-card pnl-today pnl-hero-main">
+              <span class="label">Resultado líquido hoje</span>
+              <strong id="pnl-today-net" class="mono-num">—</strong>
+              <div class="pnl-spark-wrap" id="pnl-spark-wrap">
+                <canvas id="pnl-sparkline" height="48" aria-label="Mini tendência PnL"></canvas>
+              </div>
+            </div>
+            <div class="pnl-hero-card">
+              <span class="label">Mês</span>
+              <strong id="pnl-month-net" class="mono-num">—</strong>
+            </div>
+            <div class="pnl-hero-card">
+              <span class="label">Total</span>
+              <strong id="pnl-all-net" class="mono-num">—</strong>
+            </div>
+            <div class="pnl-hero-card muted-card">
+              <span class="label">Taxas pagas (total)</span>
+              <strong id="pnl-fees-total" class="mono-num">—</strong>
+            </div>
+          </div>
+          <div class="pnl-detail-row">
+            <div class="pnl-split">
+              <div class="pnl-mini">
+                <span class="label">Lucro bruto (fechados)</span>
+                <strong id="pnl-gross-profit" class="mono-num positive">—</strong>
+              </div>
+              <div class="pnl-mini">
+                <span class="label">Prejuízo bruto (fechados)</span>
+                <strong id="pnl-gross-loss" class="mono-num negative">—</strong>
+              </div>
+            </div>
+            <div class="pnl-chart-wrap panel">
+              <h4 class="chart-subheading">Vitórias vs derrotas</h4>
+              <div class="pnl-donut-wrap">
+                <canvas id="pnl-wl-chart" aria-label="Gráfico vitórias e derrotas"></canvas>
+              </div>
+              <p id="pnl-wl-caption" class="muted chart-hint">—</p>
+            </div>
+          </div>
+          <p id="pnl-open-line" class="pnl-open-line muted hidden"></p>
+          <section class="wealth-evolution panel" id="wealth-evolution" aria-labelledby="wealth-evolution-title">
+            <header class="wealth-evolution-head">
+              <h4 id="wealth-evolution-title">Evolução do patrimônio</h4>
+              <p id="wealth-evolution-explainer" class="chart-explainer muted">
+                Capital inicial <strong id="wealth-initial-capital">—</strong> da config + resultados líquidos das operações fechadas.
+              </p>
+            </header>
+            <div class="wealth-kpi-grid">
+              <div class="pnl-hero-card">
+                <span class="label">Patrimônio atual (est.)</span>
+                <strong id="wealth-kpi-current" class="mono-num">—</strong>
+              </div>
+              <div class="pnl-hero-card muted-card">
+                <span class="label">Máximo</span>
+                <strong id="wealth-kpi-max" class="mono-num">—</strong>
+              </div>
+              <div class="pnl-hero-card muted-card">
+                <span class="label">Mínimo</span>
+                <strong id="wealth-kpi-min" class="mono-num">—</strong>
+              </div>
+              <div class="pnl-hero-card">
+                <span class="label">Variação % desde início</span>
+                <strong id="wealth-kpi-change" class="mono-num">—</strong>
+              </div>
+            </div>
+            <p id="wealth-curve-message" class="muted chart-hint hidden"></p>
+            <div class="wealth-charts-row">
+              <div class="wealth-chart-wrap chart-canvas-wrap">
+                <canvas id="wealth-equity-chart" aria-label="Patrimônio ao longo do tempo"></canvas>
+              </div>
+              <div class="wealth-dd-wrap chart-canvas-wrap chart-canvas-wrap--sm">
+                <span class="label chart-subheading">Drawdown %</span>
+                <canvas id="wealth-drawdown-chart" aria-label="Drawdown percentual"></canvas>
+              </div>
+            </div>
+          </section>
+          <div class="table-wrap pnl-closed-table-wrap">
+            <h4 class="chart-subheading">Últimas operações fechadas</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Ativo</th>
+                  <th>Estratégia</th>
+                  <th>Entrada</th>
+                  <th>Saída</th>
+                  <th>Resultado</th>
+                  <th>Taxas</th>
+                </tr>
+              </thead>
+              <tbody id="pnl-closed-body">
+                <tr><td colspan="6" class="muted">Nenhuma operação fechada ainda.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="zone zone-config panel glass-card agent-config-panel" id="agent-config-panel">
+          <header class="zone-header table-head">
+            <div>
+              <h3>Configurar</h3>
+              <p class="zone-desc">Escolha a ação B3 — capital, risco e estratégia já vêm no perfil Moderado.</p>
+              <p class="config-kb-chip muted">
+                <a href="#zone-library" id="config-kb-link">Base de conhecimento: <span id="config-kb-count">—</span> artigos</a>
+              </p>
+            </div>
+            <span id="asset-class-badge" class="mode-badge acoes">Ações BR</span>
+          </header>
+          <div class="config-simple" id="config-simple">
+            <p class="config-profile-line muted" id="config-profile-line">
+              Perfil: <strong id="config-profile-name">Moderado</strong>
+            </p>
+            <label class="ticker-search-label" for="ticker-search">Buscar ação B3</label>
+            <div class="ticker-search-wrap">
+              <input
+                type="search"
+                id="ticker-search"
+                class="ticker-search-input"
+                placeholder="Digite o ticker, ex. PETR4"
+                autocomplete="off"
+                enterkeyhint="search"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-controls="ticker-suggestions"
+                aria-describedby="ticker-selected-hint"
+              />
+              <ul id="ticker-suggestions" class="ticker-suggestions hidden" role="listbox" aria-label="Sugestões de tickers"></ul>
+            </div>
+            <p id="ticker-selected-hint" class="ticker-selected-hint muted">
+              Ativo em foco: <strong id="ticker-selected" class="mono-num">—</strong>
+            </p>
+            <div
+              id="config-summary-chips"
+              class="config-summary-chips"
+              aria-label="Resumo da configuração (somente leitura)"
+            ></div>
+            <span id="cfg-save-status" class="config-save-inline muted" aria-live="polite"></span>
+          </div>
+          <details class="config-advanced-details" id="config-advanced-details">
+            <summary class="config-advanced-toggle" id="config-advanced-toggle">Ajustes avançados</summary>
+            <div id="config-advanced-section" class="config-advanced-section">
+          <div id="config-recommended-banner" class="config-recommended-banner hidden" role="status">
+            <span>Perfil Moderado aplicado na primeira visita — capital R$ 10.000, risco 1%.</span>
+            <button type="button" id="config-banner-dismiss" class="nav-btn secondary small">Entendi</button>
+          </div>
+          <div class="config-preset-actions">
+            <button type="button" id="cfg-apply-recommended" class="refresh preset-hero-btn">
+              Restaurar perfil Moderado
+            </button>
+          </div>
+          <div id="config-preset-cards" class="config-preset-cards" aria-label="Perfis de configuração"></div>
+          <details class="config-field-help">
+            <summary>O que cada campo significa</summary>
+            <ul class="prose-muted">
+              <li><strong>Capital</strong> — patrimônio simulado; base para tamanho de posição.</li>
+              <li><strong>% risco / trade</strong> — quanto do capital você aceita perder se o stop for atingido.</li>
+              <li><strong>Qtd. ações</strong> — lote B3 (múltiplos de 100).</li>
+              <li><strong>Stop / take profit %</strong> — distância do preço de entrada até saída por perda ou ganho.</li>
+              <li><strong>Estratégia</strong> — volatilidade (ATR/Bollinger) ou rompimento clássico.</li>
+              <li><strong>Filtro de notícias</strong> — na simulação, bloqueia entradas em manchetes de cautela (heurística).</li>
+            </ul>
+          </details>
+          <p class="config-hint muted">
+            <strong>Treino em simulação</strong> — ajuste parâmetros e rode
+            <code class="code-chip">Sala-Sinais.bat</code> (opção 4). O agente padrão adapta-se à
+            <strong>volatilidade</strong> (não é ML profundo); veja
+            <a href="/docs/APRENDIZADO.md" target="_blank" rel="noopener">APRENDIZADO.md</a> e
+            <a href="/docs/DADOS_B3_TEMPO_REAL.md" target="_blank" rel="noopener">dados B3</a>.
+            <button type="button" class="tip-btn" data-tip="Simulação: dados fictícios, zero risco. Paper MT5: ordens na demo. Ao vivo: dinheiro real — só após ler MODO_REAL.md." aria-label="Ajuda: simulação vs real">?</button>
+          </p>
+          <div class="config-grid">
+            <fieldset class="symbol-fieldset">
+              <legend>Ações (B3)</legend>
+              <div id="symbol-presets" class="symbol-presets"></div>
+              <label class="inline-add">
+                Adicionar ticker
+                <input type="text" id="symbol-custom" placeholder="ex. PETR4" maxlength="12" />
+                <button type="button" id="symbol-add-btn" class="nav-btn secondary small">+</button>
+              </label>
+            </fieldset>
+            <div class="strategy-picker-wrap">
+              <span class="picker-label">Estratégia do agente</span>
+              <div class="strategy-picker" id="strategy-picker" role="group" aria-label="Escolher estratégia">
+                <button type="button" class="strategy-card" data-strategy="volatility">
+                  <span class="strategy-card-icon" aria-hidden="true">〰️</span>
+                  <strong>Volatilidade</strong>
+                  <span class="muted">ATR e bandas — stops adaptativos</span>
+                </button>
+                <button type="button" class="strategy-card" data-strategy="breakout">
+                  <span class="strategy-card-icon" aria-hidden="true">📈</span>
+                  <strong>Rompimento</strong>
+                  <span class="muted">Breakout clássico de range</span>
+                </button>
+              </div>
+            </div>
+            <div class="config-fields">
+              <label>
+                <span class="label-with-tip">Capital (R$)
+                  <button type="button" class="tip-btn" data-tip="Valor total que você simula na conta. O robô calcula tamanho de posição a partir daqui e do % de risco." aria-label="Ajuda: capital">?</button>
+                </span>
+                <input type="number" id="cfg-capital" min="100" step="100" />
+              </label>
+              <label>% risco / trade<input type="number" id="cfg-risk" min="0.1" max="100" step="0.1" /></label>
+              <label>Máx. por operação (R$)<input type="number" id="cfg-max-pos" min="100" step="50" /></label>
+              <label>
+                <span class="label-with-tip">Qtd. ações (lote 100)
+                  <button type="button" class="tip-btn" data-tip="Na B3, ações negociam em lotes de 100 unidades. Aqui você define quantas ações por ordem (mínimo 100)." aria-label="Ajuda: lote 100">?</button>
+                </span>
+                <input type="number" id="cfg-shares" min="100" step="100" />
+              </label>
+              <label>
+                <span class="label-with-tip">Stop loss %
+                  <button type="button" class="tip-btn" data-tip="Queda máxima aceita em relação ao preço de entrada. Protege o capital se o trade for contra você." aria-label="Ajuda: stop loss">?</button>
+                </span>
+                <input type="number" id="cfg-sl" min="0.1" max="50" step="0.1" />
+              </label>
+              <label>Take profit %<input type="number" id="cfg-tp" min="0.1" max="100" step="0.1" /></label>
+              <label>Ativo foco<select id="cfg-active"></select></label>
+              <label class="checkbox-row">
+                <input type="checkbox" id="cfg-rotate" /> Rotacionar tickers selecionados
+              </label>
+              <label class="checkbox-row">
+                <input type="checkbox" id="cfg-use-news" checked /> Filtro de notícias (simulação)
+              </label>
+              <label>Classe de ativo
+                <select id="cfg-asset-class">
+                  <option value="acoes">Ações BR</option>
+                  <option value="win">WIN (índice)</option>
+                  <option value="mixed">Misto</option>
+                </select>
+              </label>
+              <label class="cfg-strategy-select hidden">
+                <span class="label-with-tip">Estratégia (valor salvo)
+                  <button type="button" class="tip-btn" data-tip="Volatilidade: ajusta stops e filtros conforme ATR/Bollinger. Rompimento: lógica clássica de breakout." aria-label="Ajuda: estratégia">?</button>
+                </span>
+                <select id="cfg-strategy-type" aria-hidden="true" tabindex="-1">
+                  <option value="volatility">Volatilidade adaptativa</option>
+                  <option value="breakout">Rompimento (breakout)</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="config-actions config-sticky-bar">
+            <button type="button" id="cfg-save" class="refresh">Salvar configuração</button>
+            <button type="button" id="cfg-pause" class="nav-btn">Pausar</button>
+            <button type="button" id="cfg-resume" class="nav-btn secondary">Retomar</button>
+          </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="zone zone-alerts panel glass-card" id="zone-alerts">
+          <header class="zone-header table-head">
+            <div>
+              <h3>Alertas entrada/saída</h3>
+              <p class="zone-desc">Últimos avisos do agente — entrada em novos sinais e saída quando o trade fecha.</p>
+            </div>
+            <label class="checkbox-row alert-sound-toggle">
+              <input type="checkbox" id="alert-sound" /> Som ao novo alerta
+            </label>
+          </header>
+          <ul id="alerts-list" class="alerts-timeline alerts-toast-list" aria-live="polite">
+            <li class="muted">Carregando alertas…</li>
+          </ul>
+        </section>
+
+        <section class="zone zone-charts" id="zone-charts">
+          <header class="zone-header">
+            <h3>Gráficos</h3>
+            <p class="zone-desc">Múltiplas visões do mercado (timeframes) + PnL. Candlestick via Chart.js Financial (CDN).</p>
+          </header>
+          <div class="charts-row">
+            <section class="panel glass-card chart-panel candle-panel">
+              <div class="chart-head">
+                <div>
+                  <h4 id="candle-chart-title">Candlestick — timing e volatilidade</h4>
+                  <p class="chart-explainer" id="candle-chart-explainer">
+                    M1: micro-movimentos; M5: ritmo intraday; H1: tendência mais ampla. Corpo da vela = abertura/fechamento; sombras = máxima/mínima.
+                  </p>
+                </div>
+                <div class="tf-tabs" role="tablist" aria-label="Timeframe">
+                  <button type="button" class="tf-tab active" data-tf="M1">M1</button>
+                  <button type="button" class="tf-tab" data-tf="M5">M5</button>
+                  <button type="button" class="tf-tab" data-tf="H1">H1</button>
+                </div>
+              </div>
+              <div class="chart-canvas-wrap chart-canvas-wrap--candle">
+                <div class="chart-skeleton" id="candle-chart-skeleton" aria-hidden="true"></div>
+                <canvas id="candle-chart" aria-label="Gráfico candlestick"></canvas>
+              </div>
+            </section>
+            <section class="panel glass-card chart-panel">
+              <div class="chart-head">
+                <div>
+                  <h4 id="equity-chart-title">Curva PnL</h4>
+                  <p class="chart-explainer" id="equity-chart-explainer">O que este gráfico mostra: evolução do lucro/prejuízo líquido ao longo dos trades.</p>
+                </div>
+                <span id="equity-chart-hint" class="chart-hint muted">Aguardando dados…</span>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="equity-chart" aria-label="Gráfico de PnL acumulado"></canvas>
+              </div>
+              <h4 class="chart-subheading">Cotação recente</h4>
+              <p class="chart-explainer" id="price-chart-explainer">O que este gráfico mostra: preço médio (bid+ask) ou entradas dos últimos sinais.</p>
+              <div class="chart-canvas-wrap chart-canvas-wrap--sm">
+                <canvas id="price-chart" aria-label="Gráfico de cotação"></canvas>
+              </div>
+            </section>
+            <section class="zone zone-news panel glass-card news-panel" id="zone-news">
+              <header class="zone-header">
+                <h3>Notícias</h3>
+                <p class="zone-desc">Contexto de mercado — links externos, só leitura.</p>
+              </header>
+              <ul id="news-list" class="news-list">
+                <li class="muted">Carregando…</li>
+              </ul>
+            </section>
+          </div>
+        </section>
+
+        <section class="zone zone-library panel glass-card" id="zone-library">
+          <header class="zone-header table-head">
+            <div>
+              <h3>Biblioteca de aprendizado</h3>
+              <p class="zone-desc">Base curada em português — fundamentos, risco, estratégias do sistema e fontes abertas.</p>
+            </div>
+          </header>
+          <div class="library-meta">
+            <article class="library-size-card glass-card" aria-labelledby="library-size-heading">
+              <h4 id="library-size-heading" class="library-size-title">Tamanho da base</h4>
+              <p id="library-stat-summary" class="library-stat-summary mono-num">—</p>
+              <p id="library-stat-updated" class="muted small library-stat-updated"></p>
+            </article>
+            <details class="library-storage-panel glass-card" id="library-storage-panel">
+              <summary>Onde os dados ficam</summary>
+              <ul class="library-storage-list prose-muted">
+                <li><strong>Conhecimento educacional:</strong> pasta <code>library/</code> na raiz do projeto (artigos Markdown + <code>index.json</code>).</li>
+                <li><strong>Operações, sinais e PnL:</strong> banco SQLite <code>data/sala_sinais.db</code>.</li>
+                <li><strong>Cotações simuladas e histórico:</strong> arquivos JSON em <code>data/*.json</code> (ex.: <code>last_quote.json</code>, <code>bars_*.json</code>).</li>
+              </ul>
+              <p class="muted small">
+                A base <strong>não cresce sozinha</strong> a partir da internet — expansão por curadoria manual (roadmap de ingestão automática com revisão humana).
+                Veja <a href="/docs/BIBLIOTECA.md" target="_blank" rel="noopener">docs/BIBLIOTECA.md</a> e
+                <a href="/docs/AGENTE_CONHECIMENTO.md" target="_blank" rel="noopener">docs/AGENTE_CONHECIMENTO.md</a>.
+              </p>
+            </details>
+          </div>
+          <div class="library-backup-panel glass-card" aria-labelledby="library-backup-heading">
+            <h4 id="library-backup-heading" class="library-backup-title">Conhecimento adquirido</h4>
+            <p class="muted small library-backup-help">
+              Baixe um arquivo <code>.zip</code> com artigos e catálogo para guardar no PC. Se o sistema for resetado,
+              use <strong>Importar</strong> com o mesmo arquivo — a biblioteca anterior é copiada para
+              <code>library/backup/</code> antes de aplicar mudanças.
+            </p>
+            <div class="library-backup-actions">
+              <button type="button" id="btn-library-export" class="nav-btn">Baixar conhecimento</button>
+              <label class="library-import-label nav-btn secondary">
+                Importar conhecimento
+                <input type="file" id="library-import-file" accept=".zip,application/zip" hidden />
+              </label>
+              <select id="library-import-mode" class="library-import-mode" aria-label="Modo de importação">
+                <option value="merge" selected>Mesclar (padrão)</option>
+                <option value="replace">Substituir tudo</option>
+              </select>
+            </div>
+            <p id="library-backup-status" class="muted small library-backup-status" role="status"></p>
+          </div>
+          <div class="library-toolbar">
+            <div id="library-filters" class="library-filters" role="tablist" aria-label="Categorias"></div>
+          </div>
+          <div id="library-cards" class="library-cards">
+            <p class="muted">Carregando biblioteca…</p>
+          </div>
+          <dialog id="auto-exec-dialog" class="library-dialog auto-exec-dialog">
+            <article class="library-article-panel">
+              <header class="library-article-head">
+                <h4>Colar no .env — demo MT5</h4>
+                <button type="button" id="auto-exec-dialog-close" class="nav-btn secondary small" aria-label="Fechar">Fechar</button>
+              </header>
+              <p class="muted small">Não inclui <code>LIVE_TRADING=true</code>. Reinicie o engine após salvar.</p>
+              <textarea id="auto-exec-env-snippet" class="auto-exec-snippet" rows="8" readonly></textarea>
+              <button type="button" id="btn-auto-exec-copy" class="nav-btn">Copiar bloco</button>
+            </article>
+          </dialog>
+
+          <dialog id="library-dialog" class="library-dialog">
+            <article class="library-article-panel">
+              <header class="library-article-head">
+                <h4 id="library-article-title">—</h4>
+                <button type="button" id="library-dialog-close" class="nav-btn secondary small" aria-label="Fechar">Fechar</button>
+              </header>
+              <div id="library-article-body" class="library-article-body prose-muted"></div>
+            </article>
+          </dialog>
+          <p class="library-footer-note muted">
+            Base curada — expande com docs e fontes abertas; não substitui educação formal.
+          </p>
+        </section>
+
+        <section class="zone zone-trades panel glass-card table-panel" id="zone-trades">
+          <header class="zone-header table-head">
+            <div>
+              <h3>Operações (compra e venda)</h3>
+              <p class="zone-desc">Cada trade fechado — entrada, saída e resultado líquido por ativo.</p>
+            </div>
+            <div class="trades-toolbar">
+              <label class="trades-filter-label">
+                Ativo
+                <select id="trades-filter-symbol" class="trades-select" aria-label="Filtrar por ativo">
+                  <option value="">Todos</option>
+                </select>
+              </label>
+              <label class="trades-today-toggle">
+                <input type="checkbox" id="trades-today-only" />
+                Só hoje
+              </label>
+            </div>
+          </header>
+          <div class="trades-summary-cards" id="trades-summary-cards">
+            <div class="trades-summary-card">
+              <span class="muted small">Vitórias / derrotas</span>
+              <strong id="trades-wl" class="mono-num">—</strong>
+            </div>
+            <div class="trades-summary-card">
+              <span class="muted small">Saldo líquido</span>
+              <strong id="trades-net-total" class="mono-num">—</strong>
+            </div>
+            <div class="trades-summary-card">
+              <span class="muted small">Melhor trade</span>
+              <strong id="trades-best" class="mono-num pnl-pos">—</strong>
+            </div>
+            <div class="trades-summary-card">
+              <span class="muted small">Pior trade</span>
+              <strong id="trades-worst" class="mono-num pnl-neg">—</strong>
+            </div>
+          </div>
+          <div class="trades-by-symbol-wrap">
+            <h4 class="trades-by-symbol-title">Por ação</h4>
+            <div id="trades-by-symbol" class="trades-by-symbol-bars muted small">—</div>
+          </div>
+          <div id="trades-empty" class="empty-state hidden" aria-live="polite">
+            <span class="empty-emoji" aria-hidden="true">📊</span>
+            <p><strong>Nenhuma operação fechada</strong></p>
+            <p class="muted">Trades aparecem aqui quando um sinal é encerrado com preço de saída.</p>
+          </div>
+          <div class="table-wrap trades-table-wrap" id="trades-table-wrap">
+            <table class="signals-table trades-table" aria-label="Operações fechadas">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Ativo</th>
+                  <th>Tipo</th>
+                  <th>Entrada</th>
+                  <th>Saída</th>
+                  <th>Qtd</th>
+                  <th>Bruto</th>
+                  <th>Taxas</th>
+                  <th>Resultado líquido</th>
+                  <th>Estratégia</th>
+                  <th>Motivo saída</th>
+                </tr>
+              </thead>
+              <tbody id="trades-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="zone zone-signals panel glass-card table-panel" id="zone-signals">
+          <header class="zone-header table-head">
+            <div>
+              <h3>Sinais</h3>
+              <p class="zone-desc">Histórico de alertas gerados pelo engine — entrada, stop, alvo e resultado.</p>
+            </div>
+            <span class="muted" id="signal-count"></span>
+          </header>
+          <div id="signals-empty" class="empty-state hidden" aria-live="polite">
+            <span class="empty-emoji" aria-hidden="true">📡</span>
+            <p><strong>Nenhum sinal ainda</strong></p>
+            <p class="muted">Quando o engine estiver ativo, os alertas aparecem aqui em tempo quase real.</p>
+          </div>
+          <div class="table-wrap signals-table-wrap" id="signals-table-wrap">
+            <table class="signals-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Data</th>
+                  <th>Modo</th>
+                  <th>Lado</th>
+                  <th>Ativo</th>
+                  <th>Qtd</th>
+                  <th>Entrada</th>
+                  <th>Stop</th>
+                  <th>Alvo</th>
+                  <th>Status</th>
+                  <th>Resultado</th>
+                  <th>Estratégia</th>
+                  <th>Motivo entrada</th>
+                  <th>Motivo saída</th>
+                </tr>
+              </thead>
+              <tbody id="signals-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <p class="footer-disclaimer">
+            Infraestrutura educacional — não é recomendação de investimento. Zerar posição no MT5 exige
+            engine rodando com <code>LIVE_TRADING=true</code>.
+          </p>
+          <nav class="doc-cards" aria-label="Guias">
+            <a class="doc-card" href="/docs/SIMULACAO.md" target="_blank" rel="noopener">
+              <span class="doc-card-icon">🎓</span>
+              <strong>SIMULACAO.md</strong>
+              <span>Como subir API, engine e treinar sem risco</span>
+            </a>
+            <a class="doc-card" href="/docs/ACOES_BR.md" target="_blank" rel="noopener">
+              <span class="doc-card-icon">📈</span>
+              <strong>ACOES_BR.md</strong>
+              <span>Tickers B3, lotes e parâmetros do agente</span>
+            </a>
+            <a class="doc-card" href="/docs/MODO_REAL.md" target="_blank" rel="noopener">
+              <span class="doc-card-icon">⚠️</span>
+              <strong>MODO_REAL.md</strong>
+              <span>Checklist antes de operar com dinheiro real</span>
+            </a>
+            <a class="doc-card" href="/docs/DADOS_B3_TEMPO_REAL.md" target="_blank" rel="noopener">
+              <span class="doc-card-icon">📡</span>
+              <strong>DADOS_B3_TEMPO_REAL.md</strong>
+              <span>O que é simulado vs MT5 ao vivo na B3</span>
+            </a>
+            <a class="doc-card" href="/docs/APRENDIZADO.md" target="_blank" rel="noopener">
+              <span class="doc-card-icon">🧠</span>
+              <strong>APRENDIZADO.md</strong>
+              <span>Agente de volatilidade e roadmap de ML</span>
+            </a>
+            <a class="doc-card" href="/docs/BIBLIOTECA.md" target="_blank" rel="noopener">
+              <span class="doc-card-icon">📚</span>
+              <strong>BIBLIOTECA.md</strong>
+              <span>Como a base de conhecimento se liga às estratégias</span>
+            </a>
+          </nav>
+        </footer>
+      </main>
+    </div>
+
+    <nav class="mobile-dock" id="mobile-dock" aria-label="Navegação rápida">
+      <a class="zone-nav-link" href="#zone-status" data-zone="zone-status"><span class="nav-icon" aria-hidden="true">◉</span><span class="nav-text">Início</span></a>
+      <a class="zone-nav-link" href="#zone-pnl" data-zone="zone-pnl"><span class="nav-icon" aria-hidden="true">₿</span><span class="nav-text">PnL</span></a>
+      <a class="zone-nav-link" href="#agent-config-panel" data-zone="agent-config-panel"><span class="nav-icon" aria-hidden="true">◎</span><span class="nav-text">Config</span></a>
+      <a class="zone-nav-link" href="#zone-charts" data-zone="zone-charts"><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-text">Gráficos</span></a>
+      <a class="zone-nav-link" href="#zone-trades" data-zone="zone-trades"><span class="nav-icon" aria-hidden="true">⇄</span><span class="nav-text">Trades</span></a>
+    </nav>
+
+    <script src="/static/app.js?v=3"></script>
+  </body>
+</html>

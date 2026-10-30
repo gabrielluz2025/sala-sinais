@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Pulse Deck">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#8a6d12"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="10" fill="#0d1117"/>
+  <rect x="4" y="4" width="24" height="24" rx="8" fill="url(#g)"/>
+  <path fill="#0d1117" d="M10 16h4v6h-4zm8-6h4v12h-4z"/>
+</svg>

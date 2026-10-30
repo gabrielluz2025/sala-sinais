@@ -1,0 +1,17 @@
+Sala de Sinais — atalho
+========================
+
+Duplo clique em **Sala-Sinais.bat** na pasta do projeto (painel Pulse Deck: http://127.0.0.1:8000/ ). Apos a opcao 1, o menu volta sozinho — feche com [0].
+
+Menu:
+  [1] Abrir tudo (API + engine + painel) — padrao
+  [2] So API + painel
+  [3] So engine (MT5 conforme .env)
+  [4] Simulacao (engine sem MT5)
+  [5] Preparar MT5
+  [6] Corretora demo / modo real (preflight)
+
+Linha de comando (sem menu):
+  Sala-Sinais.bat all | sistema | engine | simulacao | mt5 | corretora | real
+
+Documentacao: README.md, docs\EXECUCAO_AUTOMATICA.md, docs\MODO_REAL.md

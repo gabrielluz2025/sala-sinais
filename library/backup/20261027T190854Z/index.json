@@ -1,0 +1,74 @@
+{
+  "categories": [
+    { "id": "fundamentos", "label": "Fundamentos" },
+    { "id": "risco", "label": "Risco" },
+    { "id": "estrategias", "label": "Estratégias" },
+    { "id": "fontes", "label": "Fontes abertas" }
+  ],
+  "articles": [
+    {
+      "id": "01-o-que-e-day-trade",
+      "title": "O que é day trade?",
+      "category": "fundamentos",
+      "tags": ["conceitos", "B3"],
+      "path": "articles/01-o-que-e-day-trade.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "02-win-vs-acoes",
+      "title": "WIN vs ações na B3",
+      "category": "fundamentos",
+      "tags": ["WIN", "ações", "lote"],
+      "path": "articles/02-win-vs-acoes.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "03-volatilidade-atr",
+      "title": "Volatilidade e ATR",
+      "category": "estrategias",
+      "tags": ["ATR", "Bollinger"],
+      "path": "articles/03-volatilidade-atr.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "04-gestao-risco",
+      "title": "Gestão de risco no intraday",
+      "category": "risco",
+      "tags": ["stop", "capital"],
+      "path": "articles/04-gestao-risco.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "05-horarios-pregao-b3",
+      "title": "Horários do pregão B3",
+      "category": "fundamentos",
+      "tags": ["pregão", "liquidez"],
+      "path": "articles/05-horarios-pregao-b3.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "06-rlp-taxas",
+      "title": "RLP e taxas de corretagem",
+      "category": "risco",
+      "tags": ["RLP", "custos"],
+      "path": "articles/06-rlp-taxas.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "07-estrategias-sistema",
+      "title": "Estratégias do Sala de Sinais",
+      "category": "estrategias",
+      "tags": ["breakout", "volatility", "engine"],
+      "path": "articles/07-estrategias-sistema.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "08-fontes-abertas",
+      "title": "Fontes abertas e educação oficial",
+      "category": "fontes",
+      "tags": ["B3", "CVM", "datasets"],
+      "path": "articles/08-fontes-abertas.md",
+      "updated": "2026-10-27"
+    }
+  ]
+}

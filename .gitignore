@@ -1,0 +1,10 @@
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.py[cod]
+.env
+data/
+*.db
+.idea/
+.vscode/

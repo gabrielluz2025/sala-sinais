@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Pulse Deck Pro — Day Trade Terminal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/assets/index-jlmk6run.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CEmWC659.css">
+  </head>
+  <body>
+    <div id="pulse-app" class="pulse-app deck-v2 deck-fit">
+      <aside class="deck-rail" aria-label="Navegação">
+        <div class="deck-rail-brand">
+          <span class="deck-logo" aria-hidden="true"></span>
+          <div class="deck-rail-brand-text">
+            <span class="deck-rail-product">Pulse Deck Pro</span>
+            <span class="deck-rail-sub">Day Trade Terminal <span class="deck-version-tag">v2.5.0-PRO</span></span>
+          </div>
+        </div>
+        <p class="deck-rail-section-label">Menu principal</p>
+        <nav id="pulse-tab-nav" class="deck-rail-nav" aria-label="Seções">
+          <button type="button" class="pulse-tab-btn deck-nav-item active" data-tab="painel" aria-selected="true">
+            <span class="deck-nav-icon" aria-hidden="true">▣</span>
+            <span class="deck-nav-label">Painel</span>
+          </button>
+          <button type="button" class="pulse-tab-btn deck-nav-item" data-tab="ops" aria-selected="false">
+            <span class="deck-nav-icon" aria-hidden="true">☰</span>
+            <span class="deck-nav-label">Operações</span>
+          </button>
+          <button type="button" class="pulse-tab-btn deck-nav-item" data-tab="lucros" aria-selected="false">
+            <span class="deck-nav-icon" aria-hidden="true">◆</span>
+            <span class="deck-nav-label">Lucros</span>
+          </button>
+          <button type="button" class="pulse-tab-btn deck-nav-item" data-tab="agente" aria-selected="false">
+            <span class="deck-nav-icon" aria-hidden="true">◉</span>
+            <span class="deck-nav-label">Agente</span>
+            <span class="deck-nav-badge">PRO</span>
+          </button>
+          <button type="button" class="pulse-tab-btn deck-nav-item" data-tab="biblioteca" aria-selected="false">
+            <span class="deck-nav-icon" aria-hidden="true">▤</span>
+            <span class="deck-nav-label">Biblioteca</span>
+          </button>
+          <button type="button" class="pulse-tab-btn deck-nav-item deck-nav-item-muted" data-tab="sistema" aria-selected="false">
+            <span class="deck-nav-icon" aria-hidden="true">⚙</span>
+            <span class="deck-nav-label">Sistema</span>
+          </button>
+        </nav>
+        <div class="deck-rail-foot">
+          <p class="deck-rail-foot-label">Controle da engine</p>
+          <div class="pulse-controls deck-rail-controls deck-engine-actions">
+            <button type="button" id="btn-pause" class="deck-engine-btn deck-engine-btn-warn" title="Pausar engine">Pausar</button>
+            <button type="button" id="btn-resume" class="deck-engine-btn deck-engine-btn-go" title="Retomar">Retomar</button>
+            <button type="button" id="btn-flatten" class="deck-engine-btn deck-engine-btn-danger" title="Zerar posições">ZERAR TUDO</button>
+          </div>
+          <div class="deck-rail-user">
+            <span class="deck-rail-user-avatar" aria-hidden="true">TP</span>
+            <div class="deck-rail-user-text">
+              <strong>Trader Pro</strong>
+              <span class="muted">Conta Real · B3</span>
+            </div>
+          </div>
+          <a href="/classic" class="deck-legacy-link">Painel legado</a>
+        </div>
+      </aside>
+
+      <div class="deck-body">
+        <div class="deck-market-ticker" id="market-ticker" aria-label="Ticker de mercado"></div>
+        <header class="deck-header deck-header-thin">
+          <div class="deck-header-row deck-header-bar deck-header-unified">
+            <div class="deck-header-status deck-header-status-inline" aria-label="Status">
+              <div class="engine-status deck-engine deck-status-inline" id="engine-status" role="status">
+                <span class="dot" id="engine-dot"></span>
+                <span id="engine-label" class="deck-status-title">ENGINE —</span>
+              </div>
+              <div class="pulse-chips deck-chips deck-status-badges" aria-live="polite">
+                <span id="chip-modo" class="live-chip deck-badge-pill chip-neutral">MODO —</span>
+                <span id="chip-overnight" class="live-chip deck-badge-pill chip-neutral hidden" title="Modo aprendizado até pregão B3">24h</span>
+                <span id="chip-agent-study" class="live-chip deck-badge-pill chip-live hidden" title="Estudo autônomo da biblioteca">Estudo 24h ativo</span>
+                <span id="header-latency" class="deck-latency mono-num">Latência: —</span>
+                <button type="button" id="cmd-open" class="deck-btn deck-btn-ghost deck-btn-sm deck-cmd-chip" title="Comando (Ctrl+K)">⌘K</button>
+                <span id="chip-engine" class="live-chip chip-neutral sr-only">Engine —</span>
+                <span id="chip-api" class="live-chip chip-neutral sr-only">API —</span>
+                <span id="header-pregao-hint" class="sr-only">Pregão B3</span>
+              </div>
+            </div>
+
+            <div class="deck-header-center-stack">
+            <div class="deck-kpi-orbit deck-kpi-orbit-compact" aria-label="Resultado day trade">
+              <article class="deck-kpi-bubble deck-kpi-bubble-hero kpi-flat" id="kpi-bubble-closed">
+                <span class="deck-kpi-bubble-label">REALIZADO</span>
+                <strong id="today-result-amount" class="deck-kpi-bubble-value mono-num">—</strong>
+                <span id="kpi-closed-sub" class="deck-kpi-bubble-sub muted sr-only">—</span>
+              </article>
+              <article class="deck-kpi-bubble kpi-flat" id="kpi-bubble-mtm">
+                <span class="deck-kpi-bubble-label">MTM ABERTO</span>
+                <strong id="today-mtm-amount" class="deck-kpi-bubble-value mono-num">—</strong>
+                <span id="kpi-open-pos" class="deck-kpi-bubble-sub muted sr-only">—</span>
+              </article>
+              <article class="deck-kpi-bubble deck-kpi-bubble-accent deck-kpi-total kpi-flat" id="kpi-bubble-day-total">
+                <span class="deck-kpi-bubble-label">P&amp;L TOTAL (EST.)</span>
+                <strong id="kpi-day-total" class="deck-kpi-bubble-value mono-num">—</strong>
+                <span class="deck-kpi-bubble-sub muted sr-only">Realizado + MTM</span>
+              </article>
+            </div>
+            <nav class="deck-header-xray" id="header-xray-nav" aria-label="Raio-X rápido no cabeçalho">
+              <div class="header-xray-item">
+                <button type="button" class="header-xray-chip" id="header-xray-btn-conhecimento" aria-expanded="false" aria-controls="header-popover-conhecimento">
+                  <span class="header-xray-chip-label">Conhecimento</span>
+                  <span class="header-xray-chip-val mono-num" id="header-xray-val-conhecimento">—</span>
+                </button>
+                <div class="header-popover" id="header-popover-conhecimento" role="dialog" aria-modal="false" hidden></div>
+              </div>
+              <div class="header-xray-item">
+                <button type="button" class="header-xray-chip" id="header-xray-btn-acertos" aria-expanded="false" aria-controls="header-popover-acertos">
+                  <span class="header-xray-chip-label">Acertos</span>
+                  <span class="header-xray-chip-val mono-num" id="header-xray-val-acertos">—</span>
+                </button>
+                <div class="header-popover" id="header-popover-acertos" role="dialog" aria-modal="false" hidden></div>
+              </div>
+              <div class="header-xray-item">
+                <button type="button" class="header-xray-chip" id="header-xray-btn-risco" aria-expanded="false" aria-controls="header-popover-risco">
+                  <span class="header-xray-chip-label">Risco</span>
+                  <span class="header-xray-chip-val mono-num" id="header-xray-val-risco">—</span>
+                </button>
+                <div class="header-popover" id="header-popover-risco" role="dialog" aria-modal="false" hidden></div>
+              </div>
+              <div class="header-xray-item">
+                <button type="button" class="header-xray-chip" id="header-xray-btn-modo" aria-expanded="false" aria-controls="header-popover-modo">
+                  <span class="header-xray-chip-label">Modo</span>
+                  <span class="header-xray-chip-val" id="header-xray-val-modo">—</span>
+                </button>
+                <div class="header-popover" id="header-popover-modo" role="dialog" aria-modal="false" hidden></div>
+              </div>
+            </nav>
+            </div>
+            <div class="sr-only" id="header-kpi-secondary" aria-hidden="true">
+              <span id="kpi-win-rate">—</span>
+              <span id="kpi-wl">—</span>
+              <span id="kpi-flow">—</span>
+              <span id="kpi-fees">—</span>
+              <span id="kpi-ir">—</span>
+              <span id="kpi-month">—</span>
+            </div>
+
+            <div class="deck-header-meta deck-header-meta-compact">
+              <button
+                type="button"
+                id="deck-back-painel"
+                class="deck-back-painel hidden"
+                hidden
+                title="Voltar ao gráfico e resumo"
+              >
+                ← Voltar ao painel
+              </button>
+              <div class="deck-quote-bubble">
+                <span class="deck-kpi-bubble-label">Ativo</span>
+                <strong id="quote-line" class="deck-kpi-bubble-value mono-num deck-quote">—</strong>
+              </div>
+              <div class="live-sync deck-sync" id="live-sync" aria-live="polite">
+                <span class="live-sync-dot" id="live-sync-dot" aria-hidden="true"></span>
+                <span id="last-update-label" class="live-sync-label">—</span>
+              </div>
+              <label class="api-field sr-only">
+                <span class="sr-only">URL da API</span>
+                <input type="text" id="api-url" value="" spellcheck="false" />
+              </label>
+            </div>
+          </div>
+          <div class="deck-header-row deck-header-session">
+            <nav class="day-timeline deck-session" id="zone-nav" aria-label="Pregão B3"></nav>
+          </div>
+        </header>
+
+        <main class="deck-main pulse-layout deck-stage--split">
+          <div class="deck-main-scroll deck-tab-scroll" id="deck-main-scroll">
+          <section class="deck-stage" id="pulse-chart-dock" aria-label="Mercado">
+            <header class="deck-stage-head">
+              <div class="deck-stage-toolbar">
+                <div class="deck-stage-toolbar-left">
+                  <label class="ticker-search-wrap deck-symbol-search">
+                    <span class="sr-only">Buscar ticker B3</span>
+                    <input
+                      type="search"
+                      id="ticker-search"
+                      class="ticker-search"
+                      placeholder="Buscar ativo…"
+                      autocomplete="off"
+                      spellcheck="false"
+                    />
+                  </label>
+                  <div id="ticker-search-results" class="ticker-search-results hidden" role="listbox"></div>
+                  <div class="deck-tf-pills" aria-label="Timeframe">
+                    <button type="button" class="deck-tf-pill" data-tf="M1">1M</button>
+                    <button type="button" class="deck-tf-pill active" data-tf="M5">5M</button>
+                    <button type="button" class="deck-tf-pill" data-tf="M15">15M</button>
+                    <button type="button" class="deck-tf-pill" data-tf="H1">1H</button>
+                    <button type="button" class="deck-tf-pill" data-tf="D1">1D</button>
+                  </div>
+                  <label class="deck-structure-toggle deck-smc-pill">
+                    <input type="checkbox" id="chart-structure-toggle" checked />
+                    <span>SMC Structure</span>
+                  </label>
+                </div>
+                <div class="deck-stage-toolbar-right">
+                  <p class="deck-price-atr">
+                    <span class="muted">ATR:</span>
+                    <strong id="chart-regime-label" class="mono-num deck-atr-label">—</strong>
+                  </p>
+                  <p class="deck-price-last">
+                    <span class="muted">PREÇO:</span>
+                    <strong class="mono-num positive">R$ <span id="current-price-display">—</span></strong>
+                  </p>
+                </div>
+              </div>
+              <div id="watchlist-bar" class="watchlist-bar deck-stage-watchlist" aria-label="Watchlist"></div>
+              <h1 id="river-symbol" class="deck-symbol mono-num sr-only">—</h1>
+              <span id="deck-strategy-badge" class="deck-badge deck-badge-muted sr-only">Estratégia —</span>
+              <div class="deck-stage-head-tools deck-stage-head-tools-compact">
+                <div class="deck-chart-toolbar sr-only">
+                  <ul class="deck-chart-legend deck-chart-legend-market" aria-label="Mercado">
+                    <li><span class="lg lg-candle-up"></span> Alta</li>
+                    <li><span class="lg lg-candle-down"></span> Baixa</li>
+                    <li><span class="lg lg-bb"></span> BB</li>
+                  </ul>
+                  <span class="deck-legend-sep" aria-hidden="true"></span>
+                  <ul class="deck-chart-legend deck-chart-legend-structure" aria-label="Estrutura SMC">
+                    <li><span class="lg lg-zone-supply"></span> Zona oferta</li>
+                    <li><span class="lg lg-zone-demand"></span> Zona demanda</li>
+                    <li><span class="lg lg-choch"></span> CHoCH</li>
+                    <li><span class="lg lg-fvg"></span> FVG</li>
+                  </ul>
+                  <span class="deck-legend-sep" aria-hidden="true"></span>
+                  <ul class="deck-chart-legend deck-chart-legend-agent" aria-label="Agente no gráfico">
+                    <li><span class="lg lg-entry"></span> Entrada</li>
+                    <li><span class="lg lg-stop"></span> Stop</li>
+                    <li><span class="lg lg-target"></span> Alvo</li>
+                    <li><span class="lg lg-win"></span> Acerto</li>
+                    <li><span class="lg lg-loss"></span> Erro</li>
+                    <li><span class="lg lg-range"></span> Range</li>
+                  </ul>
+                </div>
+                <div class="deck-chart-nav" aria-label="Navegação no gráfico">
+                  <button type="button" class="deck-btn deck-btn-sm deck-btn-ghost" data-chart-range="session">Abertura</button>
+                  <button type="button" class="deck-btn deck-btn-sm deck-btn-ghost" data-chart-range="recent">Recente</button>
+                  <button type="button" class="deck-btn deck-btn-sm deck-btn-ghost" data-chart-range="all">Histórico</button>
+                </div>
+              </div>
+            </header>
+            <div class="deck-stage-scroll">
+              <div class="river-chart-body deck-chart-frame">
+                <div id="river-chart-skeleton" class="chart-skeleton" aria-hidden="true">
+                  <div class="chart-skeleton-bars"></div>
+                </div>
+                <div id="trade-chart-host" class="trade-chart-host"></div>
+                <canvas id="river-chart" class="river-chart" role="img" aria-label="Candlestick OHLC"></canvas>
+              </div>
+              <div id="decision-panel" class="deck-decision decision-panel sr-only" aria-live="polite"></div>
+              <section class="deck-engine-log deck-engine-log-drawer is-collapsed" id="engine-log-panel" aria-label="Console de execução">
+                <header class="deck-engine-log-head">
+                  <h2><span class="deck-log-chevron" aria-hidden="true">›</span> Console de execução &amp; logs</h2>
+                  <span class="deck-engine-log-hint muted">Clique para expandir/recolher</span>
+                  <button type="button" id="engine-log-toggle" class="deck-btn deck-btn-sm deck-btn-ghost deck-engine-log-toggle" aria-expanded="false" aria-controls="engine-log-body" title="Expandir console">Expandir</button>
+                </header>
+                <div id="engine-log-body" class="deck-engine-log-body"></div>
+              </section>
+              <details class="deck-grid-fold">
+                <summary>Multi-ativo</summary>
+                <div id="ticker-grid" class="ticker-grid"></div>
+              </details>
+            </div>
+          </section>
+
+          <div
+            class="deck-split-handle"
+            id="deck-split-handle"
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Redimensionar painel"
+            tabindex="0"
+          ></div>
+
+          <div class="deck-right-column">
+            <aside class="deck-trade-rail" aria-label="Boleta e mercado">
+              <section class="deck-trade-panel">
+                <h2 class="deck-trade-panel-title">Boleta expressa</h2>
+                <div class="deck-boleta-fields">
+                  <label class="deck-boleta-field">
+                    <span>Qtd</span>
+                    <input type="number" id="boleta-qty" value="100" min="1" />
+                  </label>
+                  <label class="deck-boleta-field">
+                    <span>Stop</span>
+                    <input type="text" id="boleta-stop" placeholder="—" inputmode="decimal" />
+                  </label>
+                </div>
+                <div class="deck-boleta-actions">
+                  <button type="button" id="boleta-buy" class="deck-boleta-buy">Comprar</button>
+                  <button type="button" id="boleta-sell" class="deck-boleta-sell">Vender</button>
+                </div>
+              </section>
+              <section class="deck-trade-panel deck-depth-panel">
+                <h2 class="deck-trade-panel-title">Livro de ofertas</h2>
+                <div class="deck-depth-chart" id="depth-book" aria-label="Livro simulado">
+                  <div id="depth-asks" class="deck-depth-side asks"></div>
+                  <div class="deck-depth-mid" aria-label="Preço atual">
+                    <span class="muted">PREÇO ATUAL</span>
+                    <strong class="mono-num">R$ <span id="depth-mid-price">—</span></strong>
+                  </div>
+                  <div id="depth-bids" class="deck-depth-side bids"></div>
+                </div>
+              </section>
+              <section class="deck-trade-panel deck-pos-panel">
+                <h2 class="deck-trade-panel-title">Posições abertas</h2>
+                <div class="deck-pos-day-pnl">
+                  <span class="muted">P&amp;L DO DIA (EST.)</span>
+                  <strong id="trade-pos-day-pnl" class="mono-num">—</strong>
+                </div>
+                <div id="trade-positions-list" class="trade-positions-list"></div>
+              </section>
+            </aside>
+
+          <section class="deck-curtains" aria-label="Conteúdo">
+            <div id="tab-painel" class="pulse-tab-panel deck-curtain deck-tab-active" data-tab="painel" aria-hidden="false">
+              <header class="deck-curtain-head">
+                <h2>Resumo do dia</h2>
+              </header>
+              <div class="deck-curtain-body-fit">
+                <div class="kpi-grid deck-kpi-grid deck-kpi-grid-fit insight-deck" id="insight-deck" aria-live="polite"></div>
+              </div>
+            </div>
+          </section>
+          </div>
+
+          <section id="deck-full-stage" class="deck-full-stage" aria-label="Conteúdo em tela cheia" aria-hidden="true">
+            <div id="tab-ops" class="pulse-tab-panel deck-curtain deck-full-panel hidden" data-tab="ops" aria-hidden="true">
+              <section class="live-ops deck-tab-scroll" id="live-ops" aria-label="Operações">
+                <header class="live-ops-head">
+                  <div>
+                    <h2 class="live-ops-title">Operações</h2>
+                    <div class="ops-filter-row">
+                      <button type="button" class="ops-filter-btn active" data-ops-filter="today">Hoje</button>
+                      <button type="button" class="ops-filter-btn" data-ops-filter="all">Todos</button>
+                    </div>
+                  </div>
+                  <div class="live-ops-kpi">
+                    <span class="muted">Fechado · MTM</span>
+                    <strong id="live-ops-today-net" class="mono-num live-ops-net">—</strong>
+                  </div>
+                </header>
+                <div id="live-ops-totals" class="live-ops-totals" aria-live="polite"></div>
+                <div id="live-ops-open" class="live-ops-open hidden" aria-live="polite"></div>
+                <div class="live-ops-table-wrap live-ops-table-wrap-tall">
+                  <table class="live-ops-table" id="live-ops-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Ativo</th>
+                        <th scope="col">Lado</th>
+                        <th scope="col">Qtd</th>
+                        <th scope="col">Entrada</th>
+                        <th scope="col">Saída</th>
+                        <th scope="col">Taxas</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Resultado</th>
+                        <th scope="col">Acum.</th>
+                      </tr>
+                    </thead>
+                    <tbody id="live-ops-body"></tbody>
+                  </table>
+                </div>
+                <p class="muted ops-footnote">* Saída com asterisco = MTM estimado.</p>
+              </section>
+            </div>
+
+            <div id="tab-lucros" class="pulse-tab-panel deck-curtain deck-full-panel hidden" data-tab="lucros" aria-hidden="true">
+              <header class="deck-curtain-head"><h2>Lucros</h2></header>
+              <div id="tab-lucros-body" class="tab-embed-body deck-curtain-body deck-tab-scroll"></div>
+            </div>
+
+            <div id="tab-agente" class="pulse-tab-panel deck-curtain deck-full-panel hidden" data-tab="agente" aria-hidden="true">
+              <header class="deck-curtain-head"><h2>Agente</h2></header>
+              <div class="deck-tab-scroll deck-tab-scroll--stack">
+                <div id="tab-agente-body" class="tab-embed-body deck-curtain-body"></div>
+                <div id="agent-study-panel" class="agent-study-panel deck-agente-study" aria-label="Estudo do agente"></div>
+              </div>
+            </div>
+
+            <div id="tab-biblioteca" class="pulse-tab-panel deck-curtain deck-full-panel hidden" data-tab="biblioteca" aria-hidden="true">
+              <header class="deck-curtain-head"><h2>Biblioteca</h2></header>
+              <div id="tab-biblioteca-body" class="tab-embed-body deck-curtain-body deck-tab-scroll"></div>
+            </div>
+
+            <div id="tab-sistema" class="pulse-tab-panel deck-curtain deck-full-panel hidden" data-tab="sistema" aria-hidden="true">
+              <header class="deck-curtain-head"><h2>Sistema</h2></header>
+              <div id="tab-sistema-body" class="tab-embed-body deck-curtain-body deck-tab-scroll">
+                <p class="muted">
+                  <a href="/classic" class="legado-link-inline">Painel legado (gráficos avançados)</a>
+                </p>
+              </div>
+            </div>
+          </section>
+          </div>
+        </main>
+      </div>
+
+      <aside id="pulse-sheet" class="pulse-sheet" hidden aria-labelledby="pulse-sheet-title">
+        <div class="sheet-grab" aria-hidden="true"></div>
+        <header class="sheet-head">
+          <h2 id="pulse-sheet-title">—</h2>
+          <button type="button" id="pulse-sheet-close" class="sheet-close" aria-label="Fechar">×</button>
+        </header>
+        <div id="pulse-sheet-body" class="sheet-body"></div>
+      </aside>
+
+      <dialog id="command-dialog" class="command-dialog">
+        <form method="dialog" class="command-form" id="command-form">
+          <label class="sr-only" for="command-input">Comando</label>
+          <input
+            type="search"
+            id="command-input"
+            placeholder="Ticker, zona, exportar biblioteca…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <ul id="command-results" class="command-results" role="listbox"></ul>
+        </form>
+      </dialog>
+
+      <div id="offline-banner" class="offline-banner hidden" role="alert">API offline</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,493 @@
+{
+  "categories": [
+    {
+      "id": "acoes-b3",
+      "label": "Ações B3"
+    },
+    {
+      "id": "candles",
+      "label": "Candlesticks"
+    },
+    {
+      "id": "estrategias",
+      "label": "Estratégias"
+    },
+    {
+      "id": "fontes",
+      "label": "Fontes abertas"
+    },
+    {
+      "id": "fundamentos",
+      "label": "Fundamentos"
+    },
+    {
+      "id": "macro",
+      "label": "Macro"
+    },
+    {
+      "id": "noticias",
+      "label": "Notícias"
+    },
+    {
+      "id": "psicologia",
+      "label": "Psicologia"
+    },
+    {
+      "id": "risco",
+      "label": "Risco"
+    }
+  ],
+  "articles": [
+    {
+      "id": "01-o-que-e-day-trade",
+      "title": "O que é day trade?",
+      "category": "fundamentos",
+      "tags": [
+        "conceitos",
+        "B3"
+      ],
+      "path": "articles/01-o-que-e-day-trade.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "02-win-vs-acoes",
+      "title": "WIN vs ações na B3",
+      "category": "fundamentos",
+      "tags": [
+        "WIN",
+        "ações",
+        "lote"
+      ],
+      "path": "articles/02-win-vs-acoes.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "03-volatilidade-atr",
+      "title": "Volatilidade e ATR",
+      "category": "estrategias",
+      "tags": [
+        "ATR",
+        "Bollinger"
+      ],
+      "path": "articles/03-volatilidade-atr.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "04-gestao-risco",
+      "title": "Gestão de risco no intraday",
+      "category": "risco",
+      "tags": [
+        "stop",
+        "capital"
+      ],
+      "path": "articles/04-gestao-risco.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "05-horarios-pregao-b3",
+      "title": "Horários do pregão B3",
+      "category": "fundamentos",
+      "tags": [
+        "pregão",
+        "liquidez"
+      ],
+      "path": "articles/05-horarios-pregao-b3.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "06-rlp-taxas",
+      "title": "RLP e taxas de corretagem",
+      "category": "risco",
+      "tags": [
+        "RLP",
+        "custos"
+      ],
+      "path": "articles/06-rlp-taxas.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "07-estrategias-sistema",
+      "title": "Estratégias do Sala de Sinais",
+      "category": "estrategias",
+      "tags": [
+        "breakout",
+        "volatility",
+        "engine"
+      ],
+      "path": "articles/07-estrategias-sistema.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "08-fontes-abertas",
+      "title": "Fontes abertas e educação oficial",
+      "category": "fontes",
+      "tags": [
+        "B3",
+        "CVM",
+        "datasets"
+      ],
+      "path": "articles/08-fontes-abertas.md",
+      "updated": "2026-10-27"
+    },
+    {
+      "id": "09-martelo-hammer",
+      "title": "Martelo e martelo invertido",
+      "category": "candles",
+      "tags": [
+        "hammer",
+        "reversão",
+        "M5"
+      ],
+      "path": "articles/09-martelo-hammer.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "10-doji-indecisao",
+      "title": "Doji — equilíbrio e indecisão",
+      "category": "candles",
+      "tags": [
+        "doji",
+        "indecisão",
+        "day trade"
+      ],
+      "path": "articles/10-doji-indecisao.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "11-engolfo",
+      "title": "Engolfo de alta e de baixa",
+      "category": "candles",
+      "tags": [
+        "engulfing",
+        "reversão",
+        "B3"
+      ],
+      "path": "articles/11-engolfo.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "12-estrela-cadente",
+      "title": "Estrela cadente no intraday",
+      "category": "candles",
+      "tags": [
+        "shooting star",
+        "topo",
+        "WIN"
+      ],
+      "path": "articles/12-estrela-cadente.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "13-piao-indecisao",
+      "title": "Pião, Marubozu e leitura de força",
+      "category": "candles",
+      "tags": [
+        "spinning top",
+        "marubozu",
+        "psicologia"
+      ],
+      "path": "articles/13-piao-indecisao.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "14-tres-pilares-setup",
+      "title": "Três pilares do setup (contexto / gatilho / saída)",
+      "category": "estrategias",
+      "tags": [
+        "setup",
+        "day trade",
+        "B3"
+      ],
+      "path": "articles/14-tres-pilares-setup.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "15-breakout-range-stop",
+      "title": "Breakout de range e stop",
+      "category": "estrategias",
+      "tags": [
+        "breakout",
+        "range",
+        "stop"
+      ],
+      "path": "articles/15-breakout-range-stop.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "16-volatilidade-atr-stop",
+      "title": "Volatilidade adaptativa e stops",
+      "category": "estrategias",
+      "tags": [
+        "volatility",
+        "ATR",
+        "regime"
+      ],
+      "path": "articles/16-volatilidade-atr-stop.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "17-rr-e-posicao",
+      "title": "R:R 2:1 e tamanho de posição",
+      "category": "risco",
+      "tags": [
+        "R:R",
+        "position sizing",
+        "capital"
+      ],
+      "path": "articles/17-rr-e-posicao.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "18-fechar-antes-leilao",
+      "title": "Zerar posição antes do leilão (17h55)",
+      "category": "fundamentos",
+      "tags": [
+        "leilão",
+        "horário",
+        "day trade"
+      ],
+      "path": "articles/18-fechar-antes-leilao.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "19-harami",
+      "title": "Harami — pausa dentro da tendência",
+      "category": "candles",
+      "tags": [
+        "harami",
+        "reversão",
+        "M5"
+      ],
+      "path": "articles/19-harami.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "20-tres-soldados-corvos",
+      "title": "Três soldados e três corvos",
+      "category": "candles",
+      "tags": [
+        "sequência",
+        "tendência",
+        "M5"
+      ],
+      "path": "articles/20-tres-soldados-corvos.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "21-inside-bar",
+      "title": "Inside bar — compressão antes do movimento",
+      "category": "candles",
+      "tags": [
+        "inside bar",
+        "compressão",
+        "breakout"
+      ],
+      "path": "articles/21-inside-bar.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "22-rejeicao-pavio",
+      "title": "Rejeição por pavio (pin bar)",
+      "category": "candles",
+      "tags": [
+        "pin bar",
+        "rejeição",
+        "liquidez"
+      ],
+      "path": "articles/22-rejeicao-pavio.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "23-volume-liquidez-b3",
+      "title": "Volume e liquidez no pregão B3",
+      "category": "acoes-b3",
+      "tags": [
+        "volume",
+        "liquidez",
+        "pregão"
+      ],
+      "path": "articles/23-volume-liquidez-b3.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "24-tape-reading-basico",
+      "title": "Tape reading — leitura de fluxo básica",
+      "category": "estrategias",
+      "tags": [
+        "tape",
+        "fluxo",
+        "times trades"
+      ],
+      "path": "articles/24-tape-reading-basico.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "25-calendario-economico-day-trade",
+      "title": "Calendário econômico e day trade",
+      "category": "noticias",
+      "tags": [
+        "calendário",
+        "macro",
+        "agenda"
+      ],
+      "path": "articles/25-calendario-economico-day-trade.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "26-noticias-corporativas-intraday",
+      "title": "Notícias corporativas no intraday",
+      "category": "noticias",
+      "tags": [
+        "resultados",
+        "fatos relevantes",
+        "ações"
+      ],
+      "path": "articles/26-noticias-corporativas-intraday.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "27-rotacao-setores-b3",
+      "title": "Rotação setorial na B3",
+      "category": "acoes-b3",
+      "tags": [
+        "setores",
+        "rotation",
+        "índice"
+      ],
+      "path": "articles/27-rotacao-setores-b3.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "28-acoes-liquidas-day-trade",
+      "title": "Ações líquidas para day trade",
+      "category": "acoes-b3",
+      "tags": [
+        "PETR4",
+        "liquidez",
+        "watchlist"
+      ],
+      "path": "articles/28-acoes-liquidas-day-trade.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "29-vwap-intraday",
+      "title": "VWAP no intraday",
+      "category": "estrategias",
+      "tags": [
+        "VWAP",
+        "média",
+        "institucional"
+      ],
+      "path": "articles/29-vwap-intraday.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "30-suporte-resistencia-intraday",
+      "title": "Suporte e resistência intraday",
+      "category": "estrategias",
+      "tags": [
+        "S/R",
+        "range",
+        "níveis"
+      ],
+      "path": "articles/30-suporte-resistencia-intraday.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "31-gap-abertura-b3",
+      "title": "Gap de abertura na B3",
+      "category": "fundamentos",
+      "tags": [
+        "gap",
+        "abertura",
+        "overnight"
+      ],
+      "path": "articles/31-gap-abertura-b3.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "32-psicologia-fomo-revenge",
+      "title": "FOMO e revenge trading",
+      "category": "psicologia",
+      "tags": [
+        "disciplina",
+        "FOMO",
+        "revenge"
+      ],
+      "path": "articles/32-psicologia-fomo-revenge.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "33-macro-selic-dolar-intraday",
+      "title": "Selic, dólar e intraday",
+      "category": "macro",
+      "tags": [
+        "Selic",
+        "dólar",
+        "juros"
+      ],
+      "path": "articles/33-macro-selic-dolar-intraday.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "34-falso-rompimento",
+      "title": "Falso rompimento (bull/bear trap)",
+      "category": "estrategias",
+      "tags": [
+        "fake breakout",
+        "armadilha",
+        "stop hunt"
+      ],
+      "path": "articles/34-falso-rompimento.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "35-order-flow-book-b3",
+      "title": "Book de ofertas — conceitos básicos",
+      "category": "estrategias",
+      "tags": [
+        "book",
+        "DOM",
+        "microestrutura"
+      ],
+      "path": "articles/35-order-flow-book-b3.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "36-sequencia-marubozu",
+      "title": "Sequências de Marubozu e momentum",
+      "category": "candles",
+      "tags": [
+        "marubozu",
+        "momentum",
+        "tendência"
+      ],
+      "path": "articles/36-sequencia-marubozu.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "37-noticias-macro-copom",
+      "title": "Copom e pregão — o que esperar",
+      "category": "noticias",
+      "tags": [
+        "Copom",
+        "BCB",
+        "volatilidade"
+      ],
+      "path": "articles/37-noticias-macro-copom.md",
+      "updated": "2026-10-29"
+    },
+    {
+      "id": "38-fibonacci-intraday-pragmatico",
+      "title": "Fibonacci intraday (uso pragmático)",
+      "category": "estrategias",
+      "tags": [
+        "fibonacci",
+        "retração",
+        "pullback"
+      ],
+      "path": "articles/38-fibonacci-intraday-pragmatico.md",
+      "updated": "2026-10-29"
+    }
+  ]
+}
