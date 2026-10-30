@@ -2,7 +2,7 @@
 
 Você quer usar o **domínio na Hostinger** com o plano **Website / hospedagem compartilhada** (File Manager, WordPress, construtor, parking `cdn.hstgr.net`) — **sem** contratar um **VPS**. Este guia explica o que isso implica de forma direta e quais caminhos **funcionam** para o Sala de Sinais.
 
-> **Relacionado:** se no futuro você aceitar um VPS, use [DEPLOY_FINANCASMAIS.md](DEPLOY_FINANCASMAIS.md). Este documento é só para **“meu site na Hostinger” + sem VPS clássico**.
+> **Relacionado:** se no futuro você aceitar um VPS, use [DEPLOY_FINANCASMAIS.md](DEPLOY_FINANCASMAIS.md). Este documento é só para **“meu site na Hostinger” + sem VPS clássico**. Se o sistema anterior usava **Supabase**, veja [DEPLOY_SUPABASE_E_DOMINIO.md](DEPLOY_SUPABASE_E_DOMINIO.md).
 
 ---
 
@@ -233,4 +233,5 @@ Em planos **Website** comuns (**Single**, **Premium**, **Business** web hosting)
 - [CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md](CLOUDFLARE_TUNNEL_PASSO_A_PASSO.md) — passo a passo túnel + DNS
 - [`scripts/cloudflare-tunnel.yml.example`](../scripts/cloudflare-tunnel.yml.example) — ingress para porta 8000
 - [DEPLOY_FINANCASMAIS.md](DEPLOY_FINANCASMAIS.md) — VPS, nginx, systemd
+- [DEPLOY_SUPABASE_E_DOMINIO.md](DEPLOY_SUPABASE_E_DOMINIO.md) — legado Supabase, DNS e arquitetura
 - [MODO_REAL.md](MODO_REAL.md) — antes de trading real

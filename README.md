@@ -26,7 +26,7 @@ Edite `.env`: `MT5_SYMBOL` (nome exato do WIN no MT5).
 
 Para abrir o painel **pelo site** (sem depender do `.bat` no PC), publique a API atrás de nginx/Caddy num VPS e aponte o DNS do domínio para o servidor. **Modo simulação** funciona em VPS Linux; **ordens MT5** exigem Windows + MetaTrader na mesma máquina (ou túnel).
 
-Guia completo: **[docs/DEPLOY_FINANCASMAIS.md](docs/DEPLOY_FINANCASMAIS.md)** — DNS Hostinger, systemd, SSL e limites do MT5. **Sem VPS (só plano Website):** **[docs/DEPLOY_HOSTINGER_SITE.md](docs/DEPLOY_HOSTINGER_SITE.md)** — PC + Cloudflare Tunnel ou PaaS.
+Guia completo: **[docs/DEPLOY_FINANCASMAIS.md](docs/DEPLOY_FINANCASMAIS.md)** — DNS Hostinger, systemd, SSL e limites do MT5. **Sem VPS (só plano Website):** **[docs/DEPLOY_HOSTINGER_SITE.md](docs/DEPLOY_HOSTINGER_SITE.md)** — PC + Cloudflare Tunnel ou PaaS. **Migrando de Supabase / app antigo:** **[docs/DEPLOY_SUPABASE_E_DOMINIO.md](docs/DEPLOY_SUPABASE_E_DOMINIO.md)**.
 
 ## Abrir o sistema (mais fácil)
 
@@ -99,6 +99,7 @@ Ou `Sala-Sinais.bat` opção **6 → b** / `real`. Passo a passo completo: **[do
 
 - [docs/DEPLOY_FINANCASMAIS.md](docs/DEPLOY_FINANCASMAIS.md) — deploy web (financasmais.com), DNS, nginx, systemd
 - [docs/DEPLOY_HOSTINGER_SITE.md](docs/DEPLOY_HOSTINGER_SITE.md) — financasmais.com no plano Website Hostinger, sem VPS
+- [docs/DEPLOY_SUPABASE_E_DOMINIO.md](docs/DEPLOY_SUPABASE_E_DOMINIO.md) — Supabase vs FastAPI+engine, DNS financasmais.com
 - [docs/EXECUCAO_AUTOMATICA.md](docs/EXECUCAO_AUTOMATICA.md) — MT5 da corretora, `paper_mt5`, ordens em demo
 - [docs/MODO_REAL.md](docs/MODO_REAL.md) — preflight, `.env` live, emergência e IR
 - [docs/ROADMAP.md](docs/ROADMAP.md) — modo real, taxas/PnL, pausar engine, limitações e fase 2

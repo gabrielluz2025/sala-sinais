@@ -2,6 +2,8 @@
 
 Guia passo a passo em português para publicar o **Sala de Sinais** em `https://financasmais.com` e `https://www.financasmais.com` usando **Cloudflare Tunnel** (`cloudflared`). A **API** e o **engine** rodam no **Windows** em casa; o domínio aponta para o túnel — **sem** abrir porta no roteador e **sem** VPS na Hostinger.
 
+> Contexto **Supabase / site antigo** no mesmo domínio: [DEPLOY_SUPABASE_E_DOMINIO.md](DEPLOY_SUPABASE_E_DOMINIO.md).
+
 > Visão geral dos caminhos (landing Hostinger, PaaS, etc.): [DEPLOY_HOSTINGER_SITE.md](DEPLOY_HOSTINGER_SITE.md).
 
 ---
